@@ -63,6 +63,36 @@ const TeacherDashboard = ({ user, onLogout }) => {
     }
   };
 
+  const fetchTopStudents = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API}/students/top/by-class`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setTopStudentsByClass(response.data);
+    } catch (error) {
+      console.error('Failed to fetch top students');
+    }
+  };
+
+  const handleDeleteStudent = async (studentId, studentName) => {
+    if (!window.confirm(`هل أنت متأكد من حذف الطالبة: ${studentName}؟`)) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`${API}/students/${studentId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success('تم حذف الطالبة بنجاح');
+      fetchStudents();
+      fetchTopStudents();
+    } catch (error) {
+      toast.error('فشل حذف الطالبة');
+    }
+  };
+
   const handleAddBehavior = async (e) => {
     e.preventDefault();
     
