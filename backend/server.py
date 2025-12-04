@@ -44,13 +44,13 @@ class User(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
-    email: EmailStr
+    email: Optional[str] = None
     role: str  # admin, teacher, student
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class UserCreate(BaseModel):
     name: str
-    email: EmailStr
+    email: Optional[str] = None
     password: str
     role: str
     class_name: Optional[str] = None  # For students
