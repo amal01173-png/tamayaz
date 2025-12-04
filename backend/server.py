@@ -365,16 +365,23 @@ async def import_students(file: UploadFile = File(...), current_user: dict = Dep
         contents = await file.read()
         df = pd.read_excel(io.BytesIO(contents))
         
-        # Validate required column
+        # Validate required columns
         if 'الاسم' not in df.columns:
             raise HTTPException(
                 status_code=400, 
                 detail="الملف يجب أن يحتوي على عمود 'الاسم'"
             )
         
+        if 'الصف' not in df.columns:
+            raise HTTPException(
+                status_code=400, 
+                detail="الملف يجب أن يحتوي على عمود 'الصف' (مثال: 1/أ، 2/ب)"
+            )
+        
         added_count = 0
         skipped_count = 0
         errors = []
+        default_password_used = False
         
         for index, row in df.iterrows():
             try:
@@ -385,22 +392,41 @@ async def import_students(file: UploadFile = File(...), current_user: dict = Dep
                     skipped_count += 1
                     continue
                 
-                # Generate email from name (replace spaces with dots and add domain)
-                email_prefix = name.replace(' ', '.').lower()
-                email = f"{email_prefix}@school.com"
+                # Get class_name from Excel
+                class_name = str(row['الصف']).strip() if 'الصف' in row and pd.notna(row['الصف']) else None
                 
-                # Generate simple password (student123)
-                password = "student123"
-                
-                # Default class (will need to be updated by teacher)
-                class_name = "1/أ"
-                
-                # Check if student already exists by name
-                existing = await db.users.find_one({"name": name})
-                if existing:
+                if not class_name or class_name == 'nan':
+                    errors.append(f"الصف {index + 2}: الطالبة {name} - الصف والفصل مفقودان")
                     skipped_count += 1
-                    errors.append(f"الطالبة {name} موجودة مسبقاً")
                     continue
+                
+                # Validate class_name format (should be like "1/أ")
+                if '/' not in class_name:
+                    errors.append(f"الصف {index + 2}: الطالبة {name} - تنسيق الصف غير صحيح (يجب أن يكون مثل: 1/أ)")
+                    skipped_count += 1
+                    continue
+                
+                # Get password from Excel or use default
+                if 'كلمة المرور' in df.columns and pd.notna(row.get('كلمة المرور')):
+                    password = str(row['كلمة المرور']).strip()
+                else:
+                    password = "123456"  # Default password
+                    default_password_used = True
+                
+                # Check if student with same name and class already exists
+                existing_student = await db.students.find_one({
+                    "name": name,
+                    "class_name": class_name
+                })
+                if existing_student:
+                    skipped_count += 1
+                    errors.append(f"الطالبة {name} في الصف {class_name} موجودة مسبقاً")
+                    continue
+                
+                # Create auto email for student
+                safe_name = name.replace(" ", "_").lower()
+                safe_class = class_name.replace("/", "_")
+                email = f"{safe_name}_{safe_class}@tamayyuz.local"
                 
                 # Create user
                 user = User(
@@ -432,12 +458,17 @@ async def import_students(file: UploadFile = File(...), current_user: dict = Dep
                 errors.append(f"خطأ في الصف {index + 2}: {str(e)}")
                 skipped_count += 1
         
+        # Prepare success message
+        message = f"تم استيراد {added_count} طالبة بنجاح"
+        if default_password_used:
+            message += " | كلمة المرور الافتراضية: 123456"
+        
         return {
             "success": True,
             "added_count": added_count,
             "skipped_count": skipped_count,
-            "message": "تم إنشاء حسابات بكلمة مرور افتراضية: student123",
-            "errors": errors
+            "message": message,
+            "errors": errors if errors else []
         }
         
     except Exception as e:
