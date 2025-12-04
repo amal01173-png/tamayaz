@@ -83,9 +83,16 @@ const LandingPage = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-blue-900 text-white py-6">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-sm opacity-90" data-testid="footer-text">&copy; 2025 رواد التميز - مدرسة متوسطة غران</p>
+      <footer className="bg-blue-900 text-white py-8">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-4">
+            <p className="text-sm opacity-90" data-testid="footer-text">&copy; 2025 رواد التميز - مدرسة متوسطة غران</p>
+          </div>
+          <div className="text-center border-t border-white/20 pt-4">
+            <p className="text-sm font-semibold text-white/80">
+              تصميم المعلمة: <span className="text-white font-bold">أمل عطيه المزروعي</span>
+            </p>
+          </div>
         </div>
       </footer>
     </div>
