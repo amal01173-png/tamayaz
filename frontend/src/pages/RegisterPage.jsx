@@ -65,14 +65,21 @@ const RegisterPage = ({ onLogin }) => {
         : firstName;
       
       const className = role === 'student' ? `${grade}/${section}` : null;
-        
-      const response = await axios.post(`${API}/auth/register`, {
+      
+      // Prepare registration data
+      const registrationData = {
         name: fullName,
-        email,
         password,
         role,
         class_name: className
-      });
+      };
+      
+      // Only include email for non-students
+      if (role !== 'student') {
+        registrationData.email = email;
+      }
+        
+      const response = await axios.post(`${API}/auth/register`, registrationData);
 
       const { access_token, user } = response.data;
       
