@@ -184,18 +184,35 @@ const LoginPage = ({ onLogin }) => {
                       data-testid="student-name-input"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="student-class" data-testid="student-class-label">الصف والفصل</Label>
-                    <Input
-                      id="student-class"
-                      type="text"
-                      placeholder="مثال: 1/أ"
-                      value={studentClass}
-                      onChange={(e) => setStudentClass(e.target.value)}
-                      required
-                      className="text-right"
-                      data-testid="student-class-input"
-                    />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="student-grade" data-testid="student-grade-label">الصف</Label>
+                      <Select value={studentGrade} onValueChange={setStudentGrade}>
+                        <SelectTrigger data-testid="student-grade-select">
+                          <SelectValue placeholder="اختر الصف" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1" data-testid="grade-1">الأول</SelectItem>
+                          <SelectItem value="2" data-testid="grade-2">الثاني</SelectItem>
+                          <SelectItem value="3" data-testid="grade-3">الثالث</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="student-section" data-testid="student-section-label">الفصل</Label>
+                      <Select value={studentSection} onValueChange={setStudentSection}>
+                        <SelectTrigger data-testid="student-section-select">
+                          <SelectValue placeholder="اختر الفصل" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="أ" data-testid="section-a">أ</SelectItem>
+                          <SelectItem value="ب" data-testid="section-b">ب</SelectItem>
+                          <SelectItem value="ج" data-testid="section-c">ج</SelectItem>
+                          <SelectItem value="د" data-testid="section-d">د</SelectItem>
+                          <SelectItem value="هـ" data-testid="section-e">هـ</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="student-password" data-testid="student-password-label">كلمة المرور</Label>
