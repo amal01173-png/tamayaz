@@ -485,6 +485,7 @@ const TeacherDashboard = ({ user, onLogout }) => {
                   <TableHead className="text-right">الاسم</TableHead>
                   <TableHead className="text-right">الصف</TableHead>
                   <TableHead className="text-right">إجمالي النقاط</TableHead>
+                  <TableHead className="text-right">إجراءات</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -499,6 +500,16 @@ const TeacherDashboard = ({ user, onLogout }) => {
                       >
                         {student.total_points} نقطة
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleDeleteStudent(student.id, student.name)}
+                        data-testid={`delete-student-${index}`}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
