@@ -142,27 +142,21 @@ async def register(user_data: UserCreate):
     
     # For students, create auto email if not provided
     if user_data.role == "student" and not user_data.email:
-        # Create unique email from name and class
+        # Create unique email from name, class, and UUID to avoid duplicates
         safe_name = user_data.name.replace(" ", "_").lower()
         safe_class = user_data.class_name.replace("/", "_") if user_data.class_name else "noclass"
-        user_data.email = f"{safe_name}_{safe_class}@tamayyuz.local"
+        # Add UUID to ensure uniqueness even with duplicate names
+        unique_id = str(uuid.uuid4())[:8]
+        user_data.email = f"{safe_name}_{safe_class}_{unique_id}@tamayyuz.local"
     
-    # Check if email exists (if provided or generated)
-    if user_data.email:
+    # For non-students, check if email exists
+    if user_data.role != "student" and user_data.email:
         existing_user = await db.users.find_one({"email": user_data.email})
         if existing_user:
             raise HTTPException(status_code=400, detail="البريد الإلكتروني مسجل مسبقاً")
     
-    # Check if student with same name and class exists
-    if user_data.role == "student" and user_data.class_name:
-        existing_student = await db.students.find_one({
-            "name": user_data.name,
-            "class_name": user_data.class_name
-        })
-        if existing_student:
-            raise HTTPException(status_code=400, detail="الطالبة مسجلة مسبقاً في نفس الصف والفصل")
-    else:
-        # For non-students, check if name exists
+    # For non-students, check if name exists
+    if user_data.role != "student":
         existing_name = await db.users.find_one({"name": user_data.name})
         if existing_name:
             raise HTTPException(status_code=400, detail="الاسم مسجل مسبقاً")
