@@ -22,7 +22,8 @@ const LoginPage = ({ onLogin }) => {
   
   // Student login state
   const [studentName, setStudentName] = useState('');
-  const [studentClass, setStudentClass] = useState('');
+  const [studentGrade, setStudentGrade] = useState('');
+  const [studentSection, setStudentSection] = useState('');
   const [studentPassword, setStudentPassword] = useState('');
 
   // Load saved student credentials
@@ -30,7 +31,14 @@ const LoginPage = ({ onLogin }) => {
     const savedName = localStorage.getItem('student_name');
     const savedClass = localStorage.getItem('student_class');
     if (savedName) setStudentName(savedName);
-    if (savedClass) setStudentClass(savedClass);
+    if (savedClass) {
+      // Split saved class into grade and section (e.g., "1/أ" -> grade="1", section="أ")
+      const parts = savedClass.split('/');
+      if (parts.length === 2) {
+        setStudentGrade(parts[0]);
+        setStudentSection(parts[1]);
+      }
+    }
   }, []);
 
   const handleStaffLogin = async (e) => {
