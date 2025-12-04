@@ -306,25 +306,48 @@ const TeacherDashboard = ({ user, onLogout }) => {
                 </DialogHeader>
                 <form onSubmit={handleAddStudent} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="studentName">اسم الطالبة</Label>
+                    <Label htmlFor="studentName">اسم الطالبة (الاسم الثلاثي)</Label>
                     <Input
                       id="studentName"
+                      placeholder="مثال: فاطمة محمد الأحمد"
                       value={newStudentName}
                       onChange={(e) => setNewStudentName(e.target.value)}
                       required
                       data-testid="student-name-input"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="studentClass">الصف والفصل</Label>
-                    <Input
-                      id="studentClass"
-                      placeholder="مثال: 1/أ"
-                      value={newStudentClass}
-                      onChange={(e) => setNewStudentClass(e.target.value)}
-                      required
-                      data-testid="student-class-input"
-                    />
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="studentGrade">الصف</Label>
+                      <Select value={newStudentGrade} onValueChange={(value) => {
+                        setNewStudentGrade(value);
+                        setNewStudentSection('');
+                      }}>
+                        <SelectTrigger data-testid="student-grade-select">
+                          <SelectValue placeholder="اختر الصف" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1" data-testid="grade-1">الأول متوسط</SelectItem>
+                          <SelectItem value="2" data-testid="grade-2">الثاني متوسط</SelectItem>
+                          <SelectItem value="3" data-testid="grade-3">الثالث متوسط</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="studentSection">الفصل</Label>
+                      <Select value={newStudentSection} onValueChange={setNewStudentSection} disabled={!newStudentGrade}>
+                        <SelectTrigger data-testid="student-section-select">
+                          <SelectValue placeholder="اختر الفصل" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {getAvailableSections().map((sec) => (
+                            <SelectItem key={sec} value={sec} data-testid={`section-${sec}`}>
+                              {sec}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                   <Button 
                     type="submit" 
