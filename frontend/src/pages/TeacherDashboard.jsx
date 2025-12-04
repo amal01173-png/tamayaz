@@ -20,6 +20,8 @@ const TeacherDashboard = ({ user, onLogout }) => {
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedGrade, setSelectedGrade] = useState('');
+  const [selectedSection, setSelectedSection] = useState('');
   const [behaviorType, setBehaviorType] = useState('positive');
   const [points, setPoints] = useState(5);
   const [description, setDescription] = useState('');
