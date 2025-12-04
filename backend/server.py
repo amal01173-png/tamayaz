@@ -388,7 +388,11 @@ async def get_statistics(current_user: dict = Depends(get_current_user)):
     )
 
 @api_router.post("/students/import", response_model=dict)
-async def import_students(file: UploadFile = File(...), current_user: dict = Depends(get_current_user)):
+async def import_students(
+    file: UploadFile = File(...), 
+    class_name: Optional[str] = None,
+    current_user: dict = Depends(get_current_user)
+):
     if current_user['role'] not in ['admin', 'teacher']:
         raise HTTPException(status_code=403, detail="غير مصرح لك بهذا الإجراء")
     
@@ -407,10 +411,12 @@ async def import_students(file: UploadFile = File(...), current_user: dict = Dep
                 detail="الملف يجب أن يحتوي على عمود 'الاسم'"
             )
         
-        if 'الصف' not in df.columns:
+        # If class_name is provided as parameter, use it for all students
+        # Otherwise, require 'الصف' column in Excel
+        if not class_name and 'الصف' not in df.columns:
             raise HTTPException(
                 status_code=400, 
-                detail="الملف يجب أن يحتوي على عمود 'الصف' (مثال: 1/أ، 2/ب)"
+                detail="يجب تحديد الصف والفصل، أو إضافة عمود 'الصف' في الملف (مثال: 1/أ، 2/ب)"
             )
         
         added_count = 0
