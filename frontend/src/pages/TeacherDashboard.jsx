@@ -117,13 +117,33 @@ const TeacherDashboard = ({ user, onLogout }) => {
       toast.success('تم تسجيل السلوك بنجاح');
       setIsDialogOpen(false);
       setSelectedStudent(null);
+      setSelectedGrade('');
+      setSelectedSection('');
       setDescription('');
       setPoints(5);
       setBehaviorType('positive');
       fetchStudents();
+      fetchTopStudents();
     } catch (error) {
       toast.error(error.response?.data?.detail || 'فشل تسجيل السلوك');
     }
+  };
+
+  // Get filtered students by grade and section
+  const getFilteredStudents = () => {
+    if (!selectedGrade || !selectedSection) {
+      return [];
+    }
+    const className = `${selectedGrade}/${selectedSection}`;
+    return students.filter(s => s.class_name === className);
+  };
+
+  // Get available sections for behavior dialog
+  const getBehaviorAvailableSections = () => {
+    if (selectedGrade === '3') {
+      return ['أ', 'ب'];
+    }
+    return ['أ', 'ب', 'ج'];
   };
 
   const handleAddStudent = async (e) => {
