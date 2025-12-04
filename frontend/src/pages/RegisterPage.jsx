@@ -98,13 +98,14 @@ const RegisterPage = ({ onLogin }) => {
           <div className="text-right">
             <p className="font-bold mb-2">✅ تم إنشاء الحساب بنجاح!</p>
             <p className="text-sm">📝 احفظي بيانات الدخول:</p>
-            <p className="text-sm">• الاسم: {fullName}</p>
-            <p className="text-sm">• الصف: {className}</p>
-            <p className="text-sm">• كلمة المرور: (التي أدخلتها)</p>
+            <p className="text-sm">• <strong>الاسم:</strong> {fullName}</p>
+            <p className="text-sm">• <strong>الصف:</strong> {className}</p>
+            <p className="text-sm">• <strong>كلمة المرور:</strong> {password} (أرقام)</p>
+            <p className="text-xs text-green-700 mt-2">احفظي هذه البيانات في مكان آمن!</p>
           </div>,
           {
-            duration: 8000,
-            style: { maxWidth: '400px' }
+            duration: 10000,
+            style: { maxWidth: '450px' }
           }
         );
       } else {
