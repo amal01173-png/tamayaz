@@ -28,7 +28,7 @@ const LandingPage = () => {
               <Button 
                 onClick={() => navigate('/login')} 
                 size="lg"
-                className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-10 py-6 text-xl rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                className="bg-white text-blue-600 hover:bg-gray-50 px-10 py-6 text-xl rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 font-bold"
                 data-testid="login-button"
               >
                 <LogIn className="ml-2 h-6 w-6" />
@@ -38,7 +38,7 @@ const LandingPage = () => {
                 onClick={() => navigate('/register')} 
                 size="lg"
                 variant="outline"
-                className="border-2 border-green-600 text-green-600 hover:bg-green-50 px-10 py-6 text-xl rounded-full shadow-lg transition-all duration-300 hover:scale-105"
+                className="border-2 border-white text-white hover:bg-white/10 backdrop-blur px-10 py-6 text-xl rounded-full shadow-lg transition-all duration-300 hover:scale-105"
                 data-testid="register-button"
               >
                 إنشاء حساب
