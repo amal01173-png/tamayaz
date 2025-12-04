@@ -118,16 +118,16 @@ class TamayyuzAPITester:
         if success and 'access_token' in response:
             self.teacher_token = response['access_token']
         
-        # Test Student Registration
+        # Test Student Registration WITHOUT EMAIL (New Requirement)
         student_data = {
-            "name": f"طالبة اختبار {timestamp}",
-            "email": f"student{timestamp}@test.com",
-            "password": "test123",
-            "role": "student"
+            "name": f"فاطمة أحمد محمد {timestamp}",
+            "password": "student123",
+            "role": "student",
+            "class_name": "الصف الثالث أ"
         }
         
         success, response = self.run_api_test(
-            "Student Registration",
+            "Student Registration Without Email",
             "POST",
             "auth/register",
             200,
@@ -136,10 +136,13 @@ class TamayyuzAPITester:
         
         if success and 'access_token' in response:
             self.student_token = response['access_token']
+            self.student_name = student_data["name"]
+            self.student_class = student_data["class_name"]
+            self.student_user_id = response.get('user', {}).get('id')
 
         # Test Login with existing credentials
         login_data = {
-            "email": f"admin{timestamp}@test.com",
+            "username": f"admin{timestamp}@test.com",
             "password": "test123"
         }
         
