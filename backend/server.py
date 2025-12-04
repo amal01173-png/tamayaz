@@ -496,6 +496,8 @@ async def import_students(
         
         # Prepare success message
         message = f"تم استيراد {added_count} طالبة بنجاح"
+        if class_name:
+            message += f" إلى الصف {class_name}"
         if default_password_used:
             message += " | كلمة المرور الافتراضية: 123456"
         
@@ -504,6 +506,7 @@ async def import_students(
             "added_count": added_count,
             "skipped_count": skipped_count,
             "message": message,
+            "class_name": class_name,
             "errors": errors if errors else []
         }
         
