@@ -51,9 +51,10 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
     role: str
+    class_name: Optional[str] = None  # For students
 
 class UserLogin(BaseModel):
-    email: EmailStr
+    username: str  # Can be name or email
     password: str
 
 class Token(BaseModel):
