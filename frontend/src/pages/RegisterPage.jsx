@@ -274,9 +274,13 @@ const RegisterPage = ({ onLogin }) => {
               )}
 
               {role === 'student' && (
-                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <p className="text-sm text-yellow-800 text-center">
-                    <strong>مهم:</strong> احفظي اسمك الثلاثي وصفك وكلمة المرور لتسجيل الدخول
+                <div className="p-4 bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-lg shadow-sm">
+                  <p className="text-sm text-yellow-900 text-center font-bold mb-2">
+                    ⚠️ مهم جداً - اقرئي بعناية!
+                  </p>
+                  <p className="text-xs text-yellow-800 text-center leading-relaxed">
+                    سيتم حفظ بياناتك تلقائياً للدخول السريع في المرة القادمة<br/>
+                    <strong>احفظي كلمة المرور</strong> في مكان آمن لأنها ستكون مطلوبة دائماً
                   </p>
                 </div>
               )}
