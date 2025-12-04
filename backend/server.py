@@ -422,6 +422,75 @@ async def import_students(file: UploadFile = File(...), current_user: dict = Dep
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"فشل قراءة الملف: {str(e)}")
 
+@api_router.delete("/behavior/{behavior_id}")
+async def delete_behavior(behavior_id: str, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] not in ['admin', 'teacher']:
+        raise HTTPException(status_code=403, detail="غير مصرح لك بهذا الإجراء")
+    
+    # Get behavior record
+    behavior = await db.behavior_records.find_one({"id": behavior_id}, {"_id": 0})
+    if not behavior:
+        raise HTTPException(status_code=404, detail="السجل غير موجود")
+    
+    # Update student's total points (reverse the behavior)
+    student = await db.students.find_one({"id": behavior['student_id']})
+    if student:
+        points_change = -behavior['points'] if behavior['behavior_type'] == "positive" else behavior['points']
+        new_total = student.get('total_points', 0) + points_change
+        await db.students.update_one(
+            {"id": behavior['student_id']},
+            {"$set": {"total_points": new_total}}
+        )
+    
+    # Delete behavior record
+    await db.behavior_records.delete_one({"id": behavior_id})
+    
+    return {"success": True, "message": "تم حذف السجل بنجاح"}
+
+@api_router.delete("/students/{student_id}")
+async def delete_student(student_id: str, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] not in ['admin', 'teacher']:
+        raise HTTPException(status_code=403, detail="غير مصرح لك بهذا الإجراء")
+    
+    # Get student to get user_id
+    student = await db.students.find_one({"id": student_id}, {"_id": 0})
+    if not student:
+        raise HTTPException(status_code=404, detail="الطالبة غير موجودة")
+    
+    # Delete student's behavior records
+    await db.behavior_records.delete_many({"student_id": student_id})
+    
+    # Delete student record
+    await db.students.delete_one({"id": student_id})
+    
+    # Delete user account if exists
+    if student.get('user_id'):
+        await db.users.delete_one({"id": student['user_id']})
+    
+    return {"success": True, "message": "تم حذف الطالبة بنجاح"}
+
+@api_router.get("/students/top/by-class")
+async def get_top_students_by_class(current_user: dict = Depends(get_current_user)):
+    # Get all students
+    students = await db.students.find({}, {"_id": 0}).to_list(10000)
+    
+    # Group by class
+    classes_dict = {}
+    for student in students:
+        class_name = student.get('class_name', '')
+        if class_name not in classes_dict:
+            classes_dict[class_name] = []
+        classes_dict[class_name].append(student)
+    
+    # Get top 5 for each class
+    result = {}
+    for class_name, class_students in classes_dict.items():
+        # Sort by total_points descending
+        sorted_students = sorted(class_students, key=lambda x: x.get('total_points', 0), reverse=True)
+        result[class_name] = sorted_students[:5]
+    
+    return result
+
 @api_router.get("/")
 async def root():
     return {"message": "مرحباً بك في منصة رواد التميز"}
