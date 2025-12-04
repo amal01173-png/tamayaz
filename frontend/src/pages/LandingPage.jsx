@@ -54,7 +54,7 @@ const LandingPage = () => {
                   <TrendingUp className="w-8 h-8" />
                 </div>
               </div>
-              <h3 className="text-lg font-bold mb-2 text-center text-gray-900">تتبع السلوك</h3>
+              <h3 className="text-lg font-bold mb-2 text-center text-gray-900">رصد دقيق</h3>
               <p className="text-gray-600 text-center text-sm">نظام شامل لتسجيل السلوكيات الإيجابية والسلبية</p>
             </Card>
 
@@ -64,7 +64,7 @@ const LandingPage = () => {
                   <Award className="w-8 h-8" />
                 </div>
               </div>
-              <h3 className="text-lg font-bold mb-2 text-center text-gray-900">نظام النقاط</h3>
+              <h3 className="text-lg font-bold mb-2 text-center text-gray-900">لوحة الشرف</h3>
               <p className="text-gray-600 text-center text-sm">قياس دقيق للسلوك بنقاط من 1 إلى 10</p>
             </Card>
 
