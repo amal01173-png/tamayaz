@@ -433,16 +433,20 @@ async def import_students(
                     skipped_count += 1
                     continue
                 
-                # Get class_name from Excel
-                class_name = str(row['الصف']).strip() if 'الصف' in row and pd.notna(row['الصف']) else None
+                # Get class_name: either from parameter or from Excel
+                student_class_name = class_name  # Use parameter if provided
                 
-                if not class_name or class_name == 'nan':
-                    errors.append(f"الصف {index + 2}: الطالبة {name} - الصف والفصل مفقودان")
-                    skipped_count += 1
-                    continue
+                if not student_class_name:
+                    # If not provided as parameter, get from Excel
+                    student_class_name = str(row['الصف']).strip() if 'الصف' in row and pd.notna(row['الصف']) else None
+                    
+                    if not student_class_name or student_class_name == 'nan':
+                        errors.append(f"الصف {index + 2}: الطالبة {name} - الصف والفصل مفقودان")
+                        skipped_count += 1
+                        continue
                 
                 # Validate class_name format (should be like "1/أ")
-                if '/' not in class_name:
+                if '/' not in student_class_name:
                     errors.append(f"الصف {index + 2}: الطالبة {name} - تنسيق الصف غير صحيح (يجب أن يكون مثل: 1/أ)")
                     skipped_count += 1
                     continue
