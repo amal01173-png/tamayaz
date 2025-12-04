@@ -87,9 +87,21 @@ const RegisterPage = ({ onLogin }) => {
       if (user.role === 'student') {
         localStorage.setItem('student_name', fullName);
         localStorage.setItem('student_class', className);
-        toast.success('تم إنشاء الحساب بنجاح! احفظي: اسمك الثلاثي وصفك وكلمة المرور', {
-          duration: 6000
-        });
+        
+        // Show detailed success message with login info
+        toast.success(
+          <div className="text-right">
+            <p className="font-bold mb-2">✅ تم إنشاء الحساب بنجاح!</p>
+            <p className="text-sm">📝 احفظي بيانات الدخول:</p>
+            <p className="text-sm">• الاسم: {fullName}</p>
+            <p className="text-sm">• الصف: {className}</p>
+            <p className="text-sm">• كلمة المرور: (التي أدخلتها)</p>
+          </div>,
+          {
+            duration: 8000,
+            style: { maxWidth: '400px' }
+          }
+        );
       } else {
         toast.success('تم إنشاء الحساب بنجاح');
       }
