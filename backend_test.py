@@ -338,7 +338,7 @@ class TamayyuzAPITester:
             "Unauthorized Access - No Token",
             "GET",
             "students",
-            401  # Should fail with 401
+            403  # Should fail with 403 (FastAPI HTTPBearer behavior)
         )
         
         # Test with invalid token
