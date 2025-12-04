@@ -32,6 +32,7 @@ const TeacherDashboard = ({ user, onLogout }) => {
   const [newStudentSection, setNewStudentSection] = useState('');
   const [uploadFile, setUploadFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [topStudentsByClass, setTopStudentsByClass] = useState({});
   const fileInputRef = useRef(null);
 
   useEffect(() => {
