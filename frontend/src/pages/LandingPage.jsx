@@ -2,120 +2,89 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
-import { Award, TrendingUp, Users, BarChart3 } from 'lucide-react';
+import { Award, TrendingUp, BarChart3, LogIn } from 'lucide-react';
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
-  const features = [
-    {
-      icon: <Award className="w-12 h-12" />,
-      title: 'تتبع السلوك المتميز',
-      description: 'نظام شامل لتسجيل ومتابعة سلوكيات الطالبات الإيجابية والسلبية'
-    },
-    {
-      icon: <TrendingUp className="w-12 h-12" />,
-      title: 'نظام نقاط عادل',
-      description: 'نظام نقاط من 1 إلى 10 لقياس السلوك بدقة وشفافية'
-    },
-    {
-      icon: <BarChart3 className="w-12 h-12" />,
-      title: 'تقارير مفصلة',
-      description: 'تقارير دقيقة وإحصائيات شاملة لمتابعة تقدم الطالبات'
-    },
-    {
-      icon: <Users className="w-12 h-12" />,
-      title: 'سهولة الاستخدام',
-      description: 'واجهة بسيطة وسهلة لجميع المستخدمين من معلمات وطالبات'
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-      {/* Header */}
-      <header className="container mx-auto px-4 py-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent" data-testid="platform-title">
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-12 flex items-center justify-center min-h-screen">
+        <div className="max-w-5xl w-full">
+          {/* Hero Section */}
+          <div className="text-center mb-12">
+            <div className="mb-6">
+              <div className="inline-block p-4 bg-gradient-to-r from-green-600 to-blue-600 rounded-full mb-4">
+                <Award className="w-16 h-16 text-white" />
+              </div>
+            </div>
+            <h1 className="text-5xl md:text-6xl font-black text-gray-900 mb-4" data-testid="hero-title">
               رواد التميز
             </h1>
-            <p className="text-sm text-gray-600 mt-1" data-testid="school-name">مدرسة متوسطة غران</p>
+            <p className="text-xl text-gray-600 mb-2" data-testid="school-name">مدرسة متوسطة غران</p>
+            <p className="text-lg text-gray-500 mb-8" data-testid="hero-subtitle">منصة تتبع السلوك المتميز للطالبات</p>
+            <div className="flex justify-center gap-4 flex-wrap">
+              <Button 
+                onClick={() => navigate('/login')} 
+                size="lg"
+                className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-10 py-6 text-xl rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                data-testid="login-button"
+              >
+                <LogIn className="ml-2 h-6 w-6" />
+                تسجيل الدخول
+              </Button>
+              <Button 
+                onClick={() => navigate('/register')} 
+                size="lg"
+                variant="outline"
+                className="border-2 border-green-600 text-green-600 hover:bg-green-50 px-10 py-6 text-xl rounded-full shadow-lg transition-all duration-300 hover:scale-105"
+                data-testid="register-button"
+              >
+                إنشاء حساب
+              </Button>
+            </div>
           </div>
-          <Button 
-            onClick={() => navigate('/login')} 
-            className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-8 py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-            data-testid="header-login-button"
-          >
-            تسجيل الدخول
-          </Button>
-        </div>
-      </header>
 
-      {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20 text-center">
-        <div className="max-w-4xl mx-auto space-y-8">
-          <h2 className="text-5xl md:text-6xl font-black text-gray-900 leading-tight" data-testid="hero-title">
-            منصة إلكترونية لتعزيز
-            <span className="block mt-2 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-              السلوك الإيجابي
-            </span>
-          </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto" data-testid="hero-description">
-            نظام متكامل لتسجيل ومتابعة سلوكيات الطالبات، يساعد على بناء بيئة تعليمية إيجابية ومحفزة
-          </p>
-          <Button 
-            onClick={() => navigate('/login')} 
-            size="lg" 
-            className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-12 py-7 text-xl rounded-full shadow-2xl hover:shadow-green-200 transition-all duration-300 hover:scale-105"
-            data-testid="hero-cta-button"
-          >
-            ابدأ الآن
-          </Button>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="container mx-auto px-4 py-20" data-testid="features-section">
-        <div className="text-center mb-16">
-          <h3 className="text-4xl font-bold text-gray-900 mb-4" data-testid="features-title">مزايا المنصة</h3>
-          <p className="text-gray-600 text-lg" data-testid="features-subtitle">كل ما تحتاجه لإدارة السلوك الطلابي بكفاءة</p>
-        </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {features.map((feature, index) => (
-            <Card 
-              key={index} 
-              className="p-8 hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-green-200 hover:scale-105 bg-white"
-              data-testid={`feature-card-${index}`}
-            >
-              <div className="text-green-600 mb-4" data-testid={`feature-icon-${index}`}>{feature.icon}</div>
-              <h4 className="text-xl font-bold mb-3 text-gray-900" data-testid={`feature-title-${index}`}>{feature.title}</h4>
-              <p className="text-gray-600" data-testid={`feature-description-${index}`}>{feature.description}</p>
+          {/* Features Grid */}
+          <div className="grid md:grid-cols-3 gap-6 mt-12" data-testid="features-section">
+            <Card className="p-6 hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-green-200 bg-white/80 backdrop-blur" data-testid="feature-card-0">
+              <div className="text-green-600 mb-4 flex justify-center">
+                <div className="p-3 bg-green-100 rounded-lg">
+                  <TrendingUp className="w-8 h-8" />
+                </div>
+              </div>
+              <h3 className="text-lg font-bold mb-2 text-center text-gray-900">تتبع السلوك</h3>
+              <p className="text-gray-600 text-center text-sm">نظام شامل لتسجيل السلوكيات الإيجابية والسلبية</p>
             </Card>
-          ))}
-        </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="container mx-auto px-4 py-20">
-        <Card className="bg-gradient-to-r from-green-600 to-blue-600 p-12 text-center text-white shadow-2xl" data-testid="cta-section">
-          <h3 className="text-4xl font-bold mb-4" data-testid="cta-title">انضم إلى منصة رواد التميز</h3>
-          <p className="text-xl mb-8 opacity-90" data-testid="cta-description">ابدأ رحلتك نحو بيئة تعليمية أفضل</p>
-          <Button 
-            onClick={() => navigate('/login')} 
-            size="lg" 
-            variant="secondary"
-            className="bg-white text-green-600 hover:bg-gray-100 px-12 py-7 text-xl rounded-full shadow-xl hover:scale-105 transition-all duration-300 font-bold"
-            data-testid="cta-button"
-          >
-            تسجيل الدخول الآن
-          </Button>
-        </Card>
-      </section>
+            <Card className="p-6 hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-blue-200 bg-white/80 backdrop-blur" data-testid="feature-card-1">
+              <div className="text-blue-600 mb-4 flex justify-center">
+                <div className="p-3 bg-blue-100 rounded-lg">
+                  <Award className="w-8 h-8" />
+                </div>
+              </div>
+              <h3 className="text-lg font-bold mb-2 text-center text-gray-900">نظام النقاط</h3>
+              <p className="text-gray-600 text-center text-sm">قياس دقيق للسلوك بنقاط من 1 إلى 10</p>
+            </Card>
+
+            <Card className="p-6 hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-green-200 bg-white/80 backdrop-blur" data-testid="feature-card-2">
+              <div className="text-green-600 mb-4 flex justify-center">
+                <div className="p-3 bg-green-100 rounded-lg">
+                  <BarChart3 className="w-8 h-8" />
+                </div>
+              </div>
+              <h3 className="text-lg font-bold mb-2 text-center text-gray-900">تقارير شاملة</h3>
+              <p className="text-gray-600 text-center text-sm">متابعة دقيقة لأداء الطالبات وإحصائيات مفصلة</p>
+            </Card>
+          </div>
+        </div>
+      </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8 mt-20">
+      <footer className="bg-gray-900 text-white py-6">
         <div className="container mx-auto px-4 text-center">
-          <p data-testid="footer-text">&copy; 2025 رواد التميز - مدرسة متوسطة غران. جميع الحقوق محفوظة.</p>
+          <p className="text-sm" data-testid="footer-text">&copy; 2025 رواد التميز - مدرسة متوسطة غران</p>
         </div>
       </footer>
     </div>

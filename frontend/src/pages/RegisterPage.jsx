@@ -14,10 +14,11 @@ const API = `${BACKEND_URL}/api`;
 
 const RegisterPage = ({ onLogin }) => {
   const navigate = useNavigate();
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [middleName, setMiddleName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState('');
   const [className, setClassName] = useState('');
   const [loading, setLoading] = useState(false);
@@ -30,9 +31,12 @@ const RegisterPage = ({ onLogin }) => {
       return;
     }
 
-    if (password !== confirmPassword) {
-      toast.error('كلمتا المرور غير متطابقتين');
-      return;
+    // For students, require all three names
+    if (role === 'student') {
+      if (!firstName || !middleName || !lastName) {
+        toast.error('يرجى إدخال الاسم الثلاثي كاملاً');
+        return;
+      }
     }
 
     if (password.length < 6) {
@@ -48,8 +52,12 @@ const RegisterPage = ({ onLogin }) => {
     setLoading(true);
 
     try {
+      const fullName = role === 'student' 
+        ? `${firstName} ${middleName} ${lastName}`
+        : firstName; // For staff, only first name field is used
+        
       const response = await axios.post(`${API}/auth/register`, {
-        name,
+        name: fullName,
         email,
         password,
         role,
@@ -60,9 +68,9 @@ const RegisterPage = ({ onLogin }) => {
       
       // Save login credentials for students
       if (user.role === 'student') {
-        localStorage.setItem('student_name', name);
+        localStorage.setItem('student_name', fullName);
         localStorage.setItem('student_class', className);
-        toast.success('تم إنشاء الحساب بنجاح! احفظ: اسمك وصفك وكلمة المرور لتسجيل الدخول لاحقاً', {
+        toast.success('تم إنشاء الحساب بنجاح! احفظي: اسمك الثلاثي وصفك وكلمة المرور', {
           duration: 6000
         });
       } else {
@@ -108,18 +116,83 @@ const RegisterPage = ({ onLogin }) => {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name" data-testid="name-label">الاسم الكامل</Label>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="أدخل اسمك الكامل"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  className="text-right"
-                  data-testid="name-input"
-                />
+                <Label htmlFor="role" data-testid="role-label">نوع الحساب</Label>
+                <Select value={role} onValueChange={setRole}>
+                  <SelectTrigger data-testid="role-select">
+                    <SelectValue placeholder="اختر نوع الحساب" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="admin" data-testid="role-admin">مديرة</SelectItem>
+                    <SelectItem value="teacher" data-testid="role-teacher">معلمة</SelectItem>
+                    <SelectItem value="student" data-testid="role-student">طالبة</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
+
+              {role === 'student' ? (
+                <>
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p className="text-sm text-blue-800 text-center font-bold">
+                      أدخلي الاسم الثلاثي كما في نظام نور
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="firstName" data-testid="first-name-label">الاسم الأول</Label>
+                      <Input
+                        id="firstName"
+                        type="text"
+                        placeholder="الاسم"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        required
+                        className="text-right"
+                        data-testid="first-name-input"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="middleName" data-testid="middle-name-label">اسم الأب</Label>
+                      <Input
+                        id="middleName"
+                        type="text"
+                        placeholder="الأب"
+                        value={middleName}
+                        onChange={(e) => setMiddleName(e.target.value)}
+                        required
+                        className="text-right"
+                        data-testid="middle-name-input"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="lastName" data-testid="last-name-label">اسم العائلة</Label>
+                      <Input
+                        id="lastName"
+                        type="text"
+                        placeholder="العائلة"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        required
+                        className="text-right"
+                        data-testid="last-name-input"
+                      />
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="space-y-2">
+                  <Label htmlFor="name" data-testid="name-label">الاسم الكامل</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="أدخل اسمك الكامل"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                    className="text-right"
+                    data-testid="name-input"
+                  />
+                </div>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="email" data-testid="email-label">البريد الإلكتروني</Label>
@@ -133,20 +206,6 @@ const RegisterPage = ({ onLogin }) => {
                   className="text-right"
                   data-testid="email-input"
                 />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="role" data-testid="role-label">نوع الحساب</Label>
-                <Select value={role} onValueChange={setRole}>
-                  <SelectTrigger data-testid="role-select">
-                    <SelectValue placeholder="اختر نوع الحساب" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="admin" data-testid="role-admin">مديرة</SelectItem>
-                    <SelectItem value="teacher" data-testid="role-teacher">معلمة</SelectItem>
-                    <SelectItem value="student" data-testid="role-student">طالبة</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
 
               {role === 'student' && (
@@ -166,7 +225,7 @@ const RegisterPage = ({ onLogin }) => {
                   </div>
                   <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                     <p className="text-sm text-yellow-800 text-center">
-                      <strong>مهم:</strong> احفظي اسمك وصفك وكلمة المرور لتسجيل الدخول لاحقاً
+                      <strong>مهم:</strong> احفظي اسمك الثلاثي وصفك وكلمة المرور لتسجيل الدخول
                     </p>
                   </div>
                 </>
@@ -185,21 +244,7 @@ const RegisterPage = ({ onLogin }) => {
                   className="text-right"
                   data-testid="password-input"
                 />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword" data-testid="confirm-password-label">تأكيد كلمة المرور</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="••••••••"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  minLength={6}
-                  className="text-right"
-                  data-testid="confirm-password-input"
-                />
+                <p className="text-xs text-gray-500">6 أحرف على الأقل</p>
               </div>
 
               <Button
