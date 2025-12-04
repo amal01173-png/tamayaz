@@ -432,18 +432,59 @@ const TeacherDashboard = ({ user, onLogout }) => {
                   </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleAddBehavior} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>الصف</Label>
+                      <Select value={selectedGrade} onValueChange={(value) => {
+                        setSelectedGrade(value);
+                        setSelectedSection('');
+                        setSelectedStudent(null);
+                      }}>
+                        <SelectTrigger data-testid="behavior-grade-select">
+                          <SelectValue placeholder="اختر الصف" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1" data-testid="behavior-grade-1">الأول متوسط</SelectItem>
+                          <SelectItem value="2" data-testid="behavior-grade-2">الثاني متوسط</SelectItem>
+                          <SelectItem value="3" data-testid="behavior-grade-3">الثالث متوسط</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>الفصل</Label>
+                      <Select value={selectedSection} onValueChange={(value) => {
+                        setSelectedSection(value);
+                        setSelectedStudent(null);
+                      }} disabled={!selectedGrade}>
+                        <SelectTrigger data-testid="behavior-section-select">
+                          <SelectValue placeholder="اختر الفصل" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {getBehaviorAvailableSections().map((sec) => (
+                            <SelectItem key={sec} value={sec} data-testid={`behavior-section-${sec}`}>
+                              {sec}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
                   <div className="space-y-2">
-                    <Label>الطالبة</Label>
-                    <Select value={selectedStudent} onValueChange={setSelectedStudent}>
+                    <Label>اسم الطالبة</Label>
+                    <Select value={selectedStudent} onValueChange={setSelectedStudent} disabled={!selectedGrade || !selectedSection}>
                       <SelectTrigger data-testid="student-select">
-                        <SelectValue placeholder="اختر طالبة" />
+                        <SelectValue placeholder={!selectedGrade || !selectedSection ? "اختر الصف والفصل أولاً" : "اختر الطالبة"} />
                       </SelectTrigger>
                       <SelectContent>
-                        {students.map((student) => (
-                          <SelectItem key={student.id} value={student.id} data-testid={`student-option-${student.id}`}>
-                            {student.name} - {student.class_name}
-                          </SelectItem>
-                        ))}
+                        {getFilteredStudents().length === 0 ? (
+                          <SelectItem value="none" disabled>لا توجد طالبات في هذا الفصل</SelectItem>
+                        ) : (
+                          getFilteredStudents().map((student) => (
+                            <SelectItem key={student.id} value={student.id} data-testid={`student-option-${student.id}`}>
+                              {student.name}
+                            </SelectItem>
+                          ))
+                        )}
                       </SelectContent>
                     </Select>
                   </div>
