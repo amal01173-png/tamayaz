@@ -50,9 +50,9 @@ const LandingPage = () => {
           {/* Features Grid */}
           <div className="grid md:grid-cols-3 gap-6 mt-12" data-testid="features-section">
             <Card className="p-8 hover:shadow-2xl transition-all duration-300 border-0 bg-white/95 backdrop-blur hover:scale-105 hover:bg-white" data-testid="feature-card-0">
-              <div className="text-green-600 mb-4 flex justify-center">
-                <div className="p-4 bg-green-100 rounded-2xl shadow-md">
-                  <TrendingUp className="w-10 h-10" />
+              <div className="text-orange-600 mb-4 flex justify-center">
+                <div className="p-4 bg-orange-100 rounded-2xl shadow-md">
+                  <TrendingUp className="w-10 h-10 text-orange-600" />
                 </div>
               </div>
               <h3 className="text-xl font-bold mb-3 text-center text-gray-900">رصد دقيق</h3>
@@ -60,9 +60,9 @@ const LandingPage = () => {
             </Card>
 
             <Card className="p-8 hover:shadow-2xl transition-all duration-300 border-0 bg-white/95 backdrop-blur hover:scale-105 hover:bg-white" data-testid="feature-card-1">
-              <div className="text-blue-600 mb-4 flex justify-center">
-                <div className="p-4 bg-blue-100 rounded-2xl shadow-md">
-                  <Award className="w-10 h-10" />
+              <div className="text-green-800 mb-4 flex justify-center">
+                <div className="p-4 bg-green-100 rounded-2xl shadow-md">
+                  <Award className="w-10 h-10 text-green-800" />
                 </div>
               </div>
               <h3 className="text-xl font-bold mb-3 text-center text-gray-900">لوحة الشرف</h3>
@@ -70,9 +70,9 @@ const LandingPage = () => {
             </Card>
 
             <Card className="p-8 hover:shadow-2xl transition-all duration-300 border-0 bg-white/95 backdrop-blur hover:scale-105 hover:bg-white" data-testid="feature-card-2">
-              <div className="text-green-600 mb-4 flex justify-center">
-                <div className="p-4 bg-green-100 rounded-2xl shadow-md">
-                  <BarChart3 className="w-10 h-10" />
+              <div className="text-blue-900 mb-4 flex justify-center">
+                <div className="p-4 bg-blue-100 rounded-2xl shadow-md">
+                  <BarChart3 className="w-10 h-10 text-blue-900" />
                 </div>
               </div>
               <h3 className="text-xl font-bold mb-3 text-center text-gray-900">تقارير شاملة</h3>
