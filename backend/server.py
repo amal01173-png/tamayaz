@@ -193,20 +193,34 @@ async def register(user_data: UserCreate):
 
 @api_router.post("/auth/login", response_model=Token)
 async def login(credentials: UserLogin):
-    # Try to find user by name first, then by email
-    user = await db.users.find_one({"name": credentials.username}, {"_id": 0})
-    if not user:
-        user = await db.users.find_one({"email": credentials.username}, {"_id": 0})
+    # For students with class_name, find the correct student first by name AND class
+    if credentials.class_name:
+        # Find student by name and class_name
+        student = await db.students.find_one({
+            "name": credentials.username,
+            "class_name": credentials.class_name
+        }, {"_id": 0})
+        
+        if not student:
+            raise HTTPException(status_code=401, detail="بيانات الدخول غير صحيحة")
+        
+        # Get user by student's user_id
+        user = await db.users.find_one({"id": student['user_id']}, {"_id": 0})
+        if not user:
+            raise HTTPException(status_code=401, detail="بيانات الدخول غير صحيحة")
+    else:
+        # For non-students (teachers/admins), find by name or email
+        user = await db.users.find_one({
+            "$or": [
+                {"name": credentials.username},
+                {"email": credentials.username}
+            ]
+        }, {"_id": 0})
+        
+        if not user:
+            raise HTTPException(status_code=401, detail="بيانات الدخول غير صحيحة")
     
-    if not user:
-        raise HTTPException(status_code=401, detail="بيانات الدخول غير صحيحة")
-    
-    # For students, verify class_name as well
-    if user['role'] == 'student' and credentials.class_name:
-        student = await db.students.find_one({"user_id": user['id']}, {"_id": 0})
-        if not student or student.get('class_name') != credentials.class_name:
-            raise HTTPException(status_code=401, detail="الصف أو الفصل غير صحيح")
-    
+    # Verify password
     if not verify_password(credentials.password, user['password_hash']):
         raise HTTPException(status_code=401, detail="بيانات الدخول غير صحيحة")
     
