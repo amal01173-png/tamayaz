@@ -42,6 +42,23 @@ const StudentDashboard = ({ user, onLogout }) => {
     }
   };
 
+  const handleDeleteBehavior = async (behaviorId) => {
+    if (!window.confirm('هل أنت متأكد من حذف هذا السجل؟')) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`${API}/behavior/${behaviorId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success('تم حذف السجل بنجاح');
+      fetchStudentData();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'فشل حذف السجل');
+    }
+  };
+
   const positiveRecords = behaviorRecords.filter(r => r.behavior_type === 'positive');
   const negativeRecords = behaviorRecords.filter(r => r.behavior_type === 'negative');
   const totalPositivePoints = positiveRecords.reduce((sum, r) => sum + r.points, 0);
