@@ -175,9 +175,13 @@ const LoginPage = ({ onLogin }) => {
               </TabsContent>
               
               <TabsContent value="student">
-                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-sm text-blue-800 text-center">
-                    <strong>ملاحظة:</strong> يجب إدخال نفس الاسم والصف الذي تم التسجيل به
+                <div className="mb-4 p-4 bg-gradient-to-r from-blue-50 to-green-50 border-2 border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-900 text-center font-bold mb-1">
+                    💡 معلومة مهمة
+                  </p>
+                  <p className="text-xs text-blue-700 text-center">
+                    سيتم ملء الاسم والصف تلقائياً إذا سجلت الدخول من قبل<br/>
+                    يمكنك تغييرها إذا كنت تستخدمين حساباً مختلفاً
                   </p>
                 </div>
                 <form onSubmit={handleStudentLogin} className="space-y-4">
