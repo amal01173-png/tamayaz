@@ -460,7 +460,7 @@ async def import_students(
                 
                 # Create unique email for student with UUID to avoid duplicates
                 safe_name = name.replace(" ", "_").lower()
-                safe_class = class_name.replace("/", "_")
+                safe_class = student_class_name.replace("/", "_")
                 unique_id = str(uuid.uuid4())[:8]
                 email = f"{safe_name}_{safe_class}_{unique_id}@tamayyuz.local"
                 
@@ -481,7 +481,7 @@ async def import_students(
                 student = Student(
                     user_id=user.id,
                     name=name,
-                    class_name=class_name,
+                    class_name=student_class_name,
                     total_points=0
                 )
                 student_doc = student.model_dump()
