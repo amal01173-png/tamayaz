@@ -1,0 +1,110 @@
+{
+  "timestamp": "2025-12-04T07:50:36.172233",
+  "total_tests": 17,
+  "passed_tests": 16,
+  "success_rate": 94.11764705882352,
+  "results": [
+    {
+      "test": "Root API Endpoint",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-12-04T07:50:34.610769"
+    },
+    {
+      "test": "Admin Registration",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-12-04T07:50:34.887064"
+    },
+    {
+      "test": "Teacher Registration",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-12-04T07:50:35.146590"
+    },
+    {
+      "test": "Student Registration",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-12-04T07:50:35.417437"
+    },
+    {
+      "test": "Admin Login",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-12-04T07:50:35.676129"
+    },
+    {
+      "test": "Auth Me - Admin",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-12-04T07:50:35.708234"
+    },
+    {
+      "test": "Get Students List",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-12-04T07:50:35.781818"
+    },
+    {
+      "test": "Create Student",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-12-04T07:50:35.820799"
+    },
+    {
+      "test": "Get Single Student",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-12-04T07:50:35.852241"
+    },
+    {
+      "test": "Create Positive Behavior",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-12-04T07:50:35.897806"
+    },
+    {
+      "test": "Create Negative Behavior",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-12-04T07:50:35.930860"
+    },
+    {
+      "test": "Get Student Behavior Records",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-12-04T07:50:35.966167"
+    },
+    {
+      "test": "Get Statistics",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-12-04T07:50:35.998618"
+    },
+    {
+      "test": "Points Validation - Too High",
+      "success": true,
+      "details": "Status: 400",
+      "timestamp": "2025-12-04T07:50:36.034378"
+    },
+    {
+      "test": "Points Validation - Too Low",
+      "success": true,
+      "details": "Status: 400",
+      "timestamp": "2025-12-04T07:50:36.107221"
+    },
+    {
+      "test": "Unauthorized Access - No Token",
+      "success": false,
+      "details": "Status: 403, Error: Not authenticated",
+      "timestamp": "2025-12-04T07:50:36.138711"
+    },
+    {
+      "test": "Unauthorized Access - Invalid Token",
+      "success": true,
+      "details": "Status: 401",
+      "timestamp": "2025-12-04T07:50:36.171549"
+    }
+  ]
+}
