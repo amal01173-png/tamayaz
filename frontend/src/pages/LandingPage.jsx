@@ -48,34 +48,34 @@ const LandingPage = () => {
 
           {/* Features Grid */}
           <div className="grid md:grid-cols-3 gap-6 mt-12" data-testid="features-section">
-            <Card className="p-6 hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-green-200 bg-white/80 backdrop-blur" data-testid="feature-card-0">
+            <Card className="p-8 hover:shadow-2xl transition-all duration-300 border-0 bg-white/95 backdrop-blur hover:scale-105 hover:bg-white" data-testid="feature-card-0">
               <div className="text-green-600 mb-4 flex justify-center">
-                <div className="p-3 bg-green-100 rounded-lg">
-                  <TrendingUp className="w-8 h-8" />
+                <div className="p-4 bg-green-100 rounded-2xl shadow-md">
+                  <TrendingUp className="w-10 h-10" />
                 </div>
               </div>
-              <h3 className="text-lg font-bold mb-2 text-center text-gray-900">رصد دقيق</h3>
-              <p className="text-gray-600 text-center text-sm">نظام شامل لتسجيل السلوكيات الإيجابية والسلبية</p>
+              <h3 className="text-xl font-bold mb-3 text-center text-gray-900">رصد دقيق</h3>
+              <p className="text-gray-700 text-center leading-relaxed">تسجيل لحظي للسلوكيات الإيجابية والسلبية مع نظام نقاط واضح</p>
             </Card>
 
-            <Card className="p-6 hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-blue-200 bg-white/80 backdrop-blur" data-testid="feature-card-1">
+            <Card className="p-8 hover:shadow-2xl transition-all duration-300 border-0 bg-white/95 backdrop-blur hover:scale-105 hover:bg-white" data-testid="feature-card-1">
               <div className="text-blue-600 mb-4 flex justify-center">
-                <div className="p-3 bg-blue-100 rounded-lg">
-                  <Award className="w-8 h-8" />
+                <div className="p-4 bg-blue-100 rounded-2xl shadow-md">
+                  <Award className="w-10 h-10" />
                 </div>
               </div>
-              <h3 className="text-lg font-bold mb-2 text-center text-gray-900">لوحة الشرف</h3>
-              <p className="text-gray-600 text-center text-sm">قياس دقيق للسلوك بنقاط من 1 إلى 10</p>
+              <h3 className="text-xl font-bold mb-3 text-center text-gray-900">لوحة الشرف</h3>
+              <p className="text-gray-700 text-center leading-relaxed">تكريم الطالبات المتميزات وتشجيع السلوك الإيجابي المستمر</p>
             </Card>
 
-            <Card className="p-6 hover:shadow-xl transition-all duration-300 border-2 border-transparent hover:border-green-200 bg-white/80 backdrop-blur" data-testid="feature-card-2">
+            <Card className="p-8 hover:shadow-2xl transition-all duration-300 border-0 bg-white/95 backdrop-blur hover:scale-105 hover:bg-white" data-testid="feature-card-2">
               <div className="text-green-600 mb-4 flex justify-center">
-                <div className="p-3 bg-green-100 rounded-lg">
-                  <BarChart3 className="w-8 h-8" />
+                <div className="p-4 bg-green-100 rounded-2xl shadow-md">
+                  <BarChart3 className="w-10 h-10" />
                 </div>
               </div>
-              <h3 className="text-lg font-bold mb-2 text-center text-gray-900">تقارير شاملة</h3>
-              <p className="text-gray-600 text-center text-sm">متابعة دقيقة لأداء الطالبات وإحصائيات مفصلة</p>
+              <h3 className="text-xl font-bold mb-3 text-center text-gray-900">تقارير شاملة</h3>
+              <p className="text-gray-700 text-center leading-relaxed">إحصائيات تفصيلية لمتابعة تقدم الطالبات وأدائهن السلوكي</p>
             </Card>
           </div>
         </div>
