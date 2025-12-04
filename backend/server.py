@@ -184,10 +184,16 @@ async def login(credentials: UserLogin):
         user = await db.users.find_one({"email": credentials.username}, {"_id": 0})
     
     if not user:
-        raise HTTPException(status_code=401, detail="اسم المستخدم أو كلمة المرور غير صحيحة")
+        raise HTTPException(status_code=401, detail="بيانات الدخول غير صحيحة")
+    
+    # For students, verify class_name as well
+    if user['role'] == 'student' and credentials.class_name:
+        student = await db.students.find_one({"user_id": user['id']}, {"_id": 0})
+        if not student or student.get('class_name') != credentials.class_name:
+            raise HTTPException(status_code=401, detail="الصف أو الفصل غير صحيح")
     
     if not verify_password(credentials.password, user['password_hash']):
-        raise HTTPException(status_code=401, detail="اسم المستخدم أو كلمة المرور غير صحيحة")
+        raise HTTPException(status_code=401, detail="بيانات الدخول غير صحيحة")
     
     # Create access token
     access_token = create_access_token({"sub": user['id'], "role": user['role']})
