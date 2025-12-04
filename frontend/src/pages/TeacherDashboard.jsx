@@ -95,11 +95,17 @@ const TeacherDashboard = ({ user, onLogout }) => {
   const handleAddStudent = async (e) => {
     e.preventDefault();
     
+    if (!newStudentGrade || !newStudentSection) {
+      toast.error('يرجى اختيار الصف والفصل');
+      return;
+    }
+    
     try {
       const token = localStorage.getItem('token');
+      const className = `${newStudentGrade}/${newStudentSection}`;
       await axios.post(`${API}/students`, {
         name: newStudentName,
-        class_name: newStudentClass
+        class_name: className
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -107,11 +113,20 @@ const TeacherDashboard = ({ user, onLogout }) => {
       toast.success('تمت إضافة الطالبة بنجاح');
       setIsAddStudentOpen(false);
       setNewStudentName('');
-      setNewStudentClass('');
+      setNewStudentGrade('');
+      setNewStudentSection('');
       fetchStudents();
     } catch (error) {
       toast.error('فشل إضافة الطالبة');
     }
+  };
+  
+  // Get available sections based on selected grade
+  const getAvailableSections = () => {
+    if (newStudentGrade === '3') {
+      return ['أ', 'ب']; // Third grade has only 2 sections
+    }
+    return ['أ', 'ب', 'ج']; // First and second grades have 3 sections
   };
 
   const handleFileChange = (e) => {
