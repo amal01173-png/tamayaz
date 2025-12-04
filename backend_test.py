@@ -350,9 +350,121 @@ class TamayyuzAPITester:
         
         return success
 
+    def test_student_login_with_name_and_class(self):
+        """Test student login using name and class (New Requirement)"""
+        if not hasattr(self, 'student_name') or not hasattr(self, 'student_class'):
+            self.log_test("Student Login with Name and Class", False, "Student not registered yet")
+            return False
+            
+        # Test Student Login with name + class_name + password
+        login_data = {
+            "username": self.student_name,
+            "password": "student123",
+            "class_name": self.student_class
+        }
+        
+        success, response = self.run_api_test(
+            "Student Login with Name and Class",
+            "POST",
+            "auth/login",
+            200,
+            login_data
+        )
+        
+        return success
+
+    def test_duplicate_student_prevention(self):
+        """Test preventing duplicate student registration (New Requirement)"""
+        if not hasattr(self, 'student_name') or not hasattr(self, 'student_class'):
+            self.log_test("Duplicate Student Prevention", False, "Student not registered yet")
+            return False
+            
+        # Try to register the same student again
+        duplicate_student_data = {
+            "name": self.student_name,
+            "password": "different123",
+            "role": "student",
+            "class_name": self.student_class
+        }
+        
+        success, response = self.run_api_test(
+            "Duplicate Student Prevention",
+            "POST",
+            "auth/register",
+            400,  # Should fail with 400
+            duplicate_student_data
+        )
+        
+        return success
+
+    def test_teacher_email_requirement(self):
+        """Test that teachers still require email (New Requirement)"""
+        timestamp = datetime.now().strftime('%H%M%S')
+        
+        # Try to register teacher without email - should fail
+        teacher_no_email = {
+            "name": f"معلمة بدون بريد {timestamp}",
+            "password": "teacher123",
+            "role": "teacher"
+        }
+        
+        success, response = self.run_api_test(
+            "Teacher Registration Without Email (Should Fail)",
+            "POST",
+            "auth/register",
+            400,  # Should fail
+            teacher_no_email
+        )
+        
+        # Register teacher with email - should succeed
+        teacher_with_email = {
+            "name": f"معلمة مع بريد {timestamp}",
+            "email": f"teacher_with_email_{timestamp}@test.com",
+            "password": "teacher123",
+            "role": "teacher"
+        }
+        
+        success2, response2 = self.run_api_test(
+            "Teacher Registration With Email (Should Succeed)",
+            "POST",
+            "auth/register",
+            200,
+            teacher_with_email
+        )
+        
+        return success and success2
+
+    def test_student_data_access(self):
+        """Test accessing student data via user_id (New Requirement)"""
+        if not hasattr(self, 'student_user_id') or not self.student_user_id:
+            self.log_test("Student Data Access", False, "Student user_id not available")
+            return False
+            
+        if not self.student_token:
+            self.log_test("Student Data Access", False, "Student token not available")
+            return False
+            
+        headers = {'Authorization': f'Bearer {self.student_token}'}
+        
+        success, response = self.run_api_test(
+            "Get Student Data by User ID",
+            "GET",
+            f"students/user/{self.student_user_id}",
+            200,
+            headers=headers
+        )
+        
+        # Check if response contains total_points
+        if success and 'total_points' in response:
+            self.log_test("Student Data Contains Total Points", True, f"total_points: {response['total_points']}")
+        else:
+            self.log_test("Student Data Contains Total Points", False, "total_points field missing")
+        
+        return success
+
     def run_all_tests(self):
         """Run all tests"""
-        print("🚀 بدء اختبار منصة رواد التميز")
+        print("🚀 بدء اختبار نظام تسجيل ودخول الطلاب الجديد")
         print("=" * 50)
         
         # Basic connectivity
@@ -362,16 +474,18 @@ class TamayyuzAPITester:
         self.test_user_registration_and_login()
         self.test_auth_me_endpoint()
         
-        # Student operations
+        # NEW REQUIREMENTS TESTS
+        print("\n🔍 اختبار المتطلبات الجديدة:")
+        self.test_student_login_with_name_and_class()
+        self.test_duplicate_student_prevention()
+        self.test_teacher_email_requirement()
+        self.test_student_data_access()
+        
+        # Original tests
+        print("\n🔧 الاختبارات الأساسية:")
         self.test_student_operations()
-        
-        # Behavior operations
         self.test_behavior_operations()
-        
-        # Statistics
         self.test_statistics_endpoint()
-        
-        # Validation tests
         self.test_points_validation()
         self.test_unauthorized_access()
         
