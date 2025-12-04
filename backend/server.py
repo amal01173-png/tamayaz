@@ -344,12 +344,11 @@ async def import_students(file: UploadFile = File(...), current_user: dict = Dep
         contents = await file.read()
         df = pd.read_excel(io.BytesIO(contents))
         
-        # Validate required columns
-        required_columns = ['الاسم', 'الصف', 'البريد الإلكتروني', 'كلمة المرور']
-        if not all(col in df.columns for col in required_columns):
+        # Validate required column
+        if 'الاسم' not in df.columns:
             raise HTTPException(
                 status_code=400, 
-                detail=f"الملف يجب أن يحتوي على الأعمدة التالية: {', '.join(required_columns)}"
+                detail="الملف يجب أن يحتوي على عمود 'الاسم'"
             )
         
         added_count = 0
@@ -359,20 +358,27 @@ async def import_students(file: UploadFile = File(...), current_user: dict = Dep
         for index, row in df.iterrows():
             try:
                 name = str(row['الاسم']).strip()
-                class_name = str(row['الصف']).strip()
-                email = str(row['البريد الإلكتروني']).strip()
-                password = str(row['كلمة المرور']).strip()
                 
                 # Skip empty rows
-                if not name or not class_name or not email:
+                if not name or name == 'nan':
                     skipped_count += 1
                     continue
                 
-                # Check if student already exists
-                existing = await db.users.find_one({"email": email})
+                # Generate email from name (replace spaces with dots and add domain)
+                email_prefix = name.replace(' ', '.').lower()
+                email = f"{email_prefix}@school.com"
+                
+                # Generate simple password (student123)
+                password = "student123"
+                
+                # Default class (will need to be updated by teacher)
+                class_name = "1/أ"
+                
+                # Check if student already exists by name
+                existing = await db.users.find_one({"name": name})
                 if existing:
                     skipped_count += 1
-                    errors.append(f"الطالبة {name} موجودة مسبقاً (البريد: {email})")
+                    errors.append(f"الطالبة {name} موجودة مسبقاً")
                     continue
                 
                 # Create user
@@ -409,6 +415,7 @@ async def import_students(file: UploadFile = File(...), current_user: dict = Dep
             "success": True,
             "added_count": added_count,
             "skipped_count": skipped_count,
+            "message": "تم إنشاء حسابات بكلمة مرور افتراضية: student123",
             "errors": errors
         }
         
