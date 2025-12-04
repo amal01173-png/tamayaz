@@ -150,19 +150,26 @@ const RegisterPage = ({ onLogin }) => {
               </div>
 
               {role === 'student' && (
-                <div className="space-y-2">
-                  <Label htmlFor="className" data-testid="class-label">الفصل</Label>
-                  <Input
-                    id="className"
-                    type="text"
-                    placeholder="مثال: 1/أ"
-                    value={className}
-                    onChange={(e) => setClassName(e.target.value)}
-                    required
-                    className="text-right"
-                    data-testid="class-input"
-                  />
-                </div>
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="className" data-testid="class-label">الصف والفصل</Label>
+                    <Input
+                      id="className"
+                      type="text"
+                      placeholder="مثال: 1/أ"
+                      value={className}
+                      onChange={(e) => setClassName(e.target.value)}
+                      required
+                      className="text-right"
+                      data-testid="class-input"
+                    />
+                  </div>
+                  <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <p className="text-sm text-yellow-800 text-center">
+                      <strong>مهم:</strong> احفظي اسمك وصفك وكلمة المرور لتسجيل الدخول لاحقاً
+                    </p>
+                  </div>
+                </>
               )}
 
               <div className="space-y-2">
