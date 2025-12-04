@@ -58,6 +58,7 @@ class UserCreate(BaseModel):
 class UserLogin(BaseModel):
     username: str  # Can be name or email
     password: str
+    class_name: Optional[str] = None  # Required for students
 
 class Token(BaseModel):
     access_token: str
