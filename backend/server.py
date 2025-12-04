@@ -136,6 +136,10 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 # Auth Routes
 @api_router.post("/auth/register", response_model=Token)
 async def register(user_data: UserCreate):
+    # For non-students, email is required
+    if user_data.role != "student" and not user_data.email:
+        raise HTTPException(status_code=400, detail="البريد الإلكتروني مطلوب للمعلمات والإدارة")
+    
     # For students, create auto email if not provided
     if user_data.role == "student" and not user_data.email:
         # Create unique email from name and class
