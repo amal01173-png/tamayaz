@@ -20,8 +20,17 @@ const RegisterPage = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
-  const [className, setClassName] = useState('');
+  const [grade, setGrade] = useState('');
+  const [section, setSection] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Get available sections based on selected grade
+  const getAvailableSections = () => {
+    if (grade === '3') {
+      return ['أ', 'ب']; // Third grade has only 2 sections
+    }
+    return ['أ', 'ب', 'ج']; // First and second grades have 3 sections
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,15 +46,14 @@ const RegisterPage = ({ onLogin }) => {
         toast.error('يرجى إدخال الاسم الثلاثي كاملاً');
         return;
       }
+      if (!grade || !section) {
+        toast.error('يرجى اختيار الصف والفصل');
+        return;
+      }
     }
 
     if (password.length < 6) {
       toast.error('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
-      return;
-    }
-
-    if (role === 'student' && !className) {
-      toast.error('يرجى إدخال الفصل للطالبة');
       return;
     }
 
@@ -54,14 +62,16 @@ const RegisterPage = ({ onLogin }) => {
     try {
       const fullName = role === 'student' 
         ? `${firstName} ${middleName} ${lastName}`
-        : firstName; // For staff, only first name field is used
+        : firstName;
+      
+      const className = role === 'student' ? `${grade}/${section}` : null;
         
       const response = await axios.post(`${API}/auth/register`, {
         name: fullName,
         email,
         password,
         role,
-        class_name: role === 'student' ? className : null
+        class_name: className
       });
 
       const { access_token, user } = response.data;
@@ -177,6 +187,40 @@ const RegisterPage = ({ onLogin }) => {
                       />
                     </div>
                   </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="grade" data-testid="grade-label">الصف</Label>
+                      <Select value={grade} onValueChange={(value) => {
+                        setGrade(value);
+                        setSection(''); // Reset section when grade changes
+                      }}>
+                        <SelectTrigger data-testid="grade-select">
+                          <SelectValue placeholder="اختر الصف" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1" data-testid="grade-1">الأول متوسط</SelectItem>
+                          <SelectItem value="2" data-testid="grade-2">الثاني متوسط</SelectItem>
+                          <SelectItem value="3" data-testid="grade-3">الثالث متوسط</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="section" data-testid="section-label">الفصل</Label>
+                      <Select value={section} onValueChange={setSection} disabled={!grade}>
+                        <SelectTrigger data-testid="section-select">
+                          <SelectValue placeholder="اختر الفصل" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {getAvailableSections().map((sec) => (
+                            <SelectItem key={sec} value={sec} data-testid={`section-${sec}`}>
+                              {sec}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
                 </>
               ) : (
                 <div className="space-y-2">
@@ -209,26 +253,11 @@ const RegisterPage = ({ onLogin }) => {
               </div>
 
               {role === 'student' && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="className" data-testid="class-label">الصف والفصل</Label>
-                    <Input
-                      id="className"
-                      type="text"
-                      placeholder="مثال: 1/أ"
-                      value={className}
-                      onChange={(e) => setClassName(e.target.value)}
-                      required
-                      className="text-right"
-                      data-testid="class-input"
-                    />
-                  </div>
-                  <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <p className="text-sm text-yellow-800 text-center">
-                      <strong>مهم:</strong> احفظي اسمك الثلاثي وصفك وكلمة المرور لتسجيل الدخول
-                    </p>
-                  </div>
-                </>
+                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <p className="text-sm text-yellow-800 text-center">
+                    <strong>مهم:</strong> احفظي اسمك الثلاثي وصفك وكلمة المرور لتسجيل الدخول
+                  </p>
+                </div>
               )}
 
               <div className="space-y-2">
