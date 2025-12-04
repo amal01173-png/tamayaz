@@ -238,19 +238,21 @@ const RegisterPage = ({ onLogin }) => {
                 </div>
               )}
 
-              <div className="space-y-2">
-                <Label htmlFor="email" data-testid="email-label">البريد الإلكتروني</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="example@school.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="text-right"
-                  data-testid="email-input"
-                />
-              </div>
+              {role !== 'student' && (
+                <div className="space-y-2">
+                  <Label htmlFor="email" data-testid="email-label">البريد الإلكتروني</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="example@school.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="text-right"
+                    data-testid="email-input"
+                  />
+                </div>
+              )}
 
               {role === 'student' && (
                 <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
