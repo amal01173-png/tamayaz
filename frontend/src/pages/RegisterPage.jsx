@@ -278,33 +278,43 @@ const RegisterPage = ({ onLogin }) => {
                 </div>
               )}
 
-              {role === 'student' && (
-                <div className="p-4 bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-lg shadow-sm">
-                  <p className="text-sm text-yellow-900 text-center font-bold mb-2">
-                    ⚠️ مهم جداً - اقرئي بعناية!
-                  </p>
-                  <p className="text-xs text-yellow-800 text-center leading-relaxed">
-                    سيتم حفظ بياناتك تلقائياً للدخول السريع في المرة القادمة<br/>
-                    <strong>احفظي كلمة المرور</strong> في مكان آمن لأنها ستكون مطلوبة دائماً
-                  </p>
-                </div>
-              )}
-
               <div className="space-y-2">
-                <Label htmlFor="password" data-testid="password-label">كلمة المرور</Label>
+                <Label htmlFor="password" data-testid="password-label">
+                  كلمة المرور {role === 'student' && <span className="text-blue-600">(أرقام فقط)</span>}
+                </Label>
                 <Input
                   id="password"
-                  type="password"
-                  placeholder="••••••••"
+                  type={role === 'student' ? 'tel' : 'password'}
+                  placeholder={role === 'student' ? '123456' : '••••••••'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={6}
+                  pattern={role === 'student' ? '[0-9]*' : undefined}
+                  inputMode={role === 'student' ? 'numeric' : 'text'}
                   className="text-right"
                   data-testid="password-input"
                 />
-                <p className="text-xs text-gray-500">6 أحرف على الأقل</p>
+                <p className="text-xs text-gray-500">
+                  {role === 'student' ? '6 أرقام على الأقل (مثال: 123456)' : '6 أحرف على الأقل'}
+                </p>
               </div>
+
+              {role === 'student' && (
+                <div className="p-4 bg-gradient-to-r from-blue-50 to-green-50 border-2 border-blue-300 rounded-lg shadow-sm">
+                  <p className="text-sm text-blue-900 text-center font-bold mb-2">
+                    📝 بيانات التسجيل
+                  </p>
+                  <ul className="text-xs text-blue-800 text-right space-y-1">
+                    <li>✅ <strong>الاسم الثلاثي</strong> (كما في نظام نور)</li>
+                    <li>✅ <strong>الصف والفصل</strong> (مثال: 1/أ)</li>
+                    <li>✅ <strong>كلمة المرور</strong> (أرقام فقط - 6 أرقام على الأقل)</li>
+                  </ul>
+                  <p className="text-xs text-blue-700 text-center mt-2">
+                    سيتم حفظ بياناتك تلقائياً للدخول السريع
+                  </p>
+                </div>
+              )}
 
               <Button
                 type="submit"
