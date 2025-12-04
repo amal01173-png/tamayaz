@@ -50,10 +50,15 @@ const RegisterPage = ({ onLogin }) => {
         toast.error('يرجى اختيار الصف والفصل');
         return;
       }
+      // For students, password must be numbers only
+      if (!/^\d+$/.test(password)) {
+        toast.error('كلمة المرور للطالبات يجب أن تكون أرقام فقط');
+        return;
+      }
     }
 
     if (password.length < 6) {
-      toast.error('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+      toast.error('كلمة المرور يجب أن تكون 6 أرقام على الأقل');
       return;
     }
 
