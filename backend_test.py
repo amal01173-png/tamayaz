@@ -15,6 +15,9 @@ class TamayyuzAPITester:
         self.tests_passed = 0
         self.test_results = []
         self.created_student_id = None
+        self.student_name = None
+        self.student_class = None
+        self.student_user_id = None
 
     def log_test(self, name, success, details=""):
         """Log test result"""
