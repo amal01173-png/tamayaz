@@ -62,6 +62,12 @@ const LoginPage = ({ onLogin }) => {
       });
 
       const { access_token, user } = response.data;
+      
+      // Save staff login username for auto-fill next time
+      if (user.role !== 'student') {
+        localStorage.setItem('staff_username', staffUsername);
+      }
+      
       onLogin(user, access_token);
       toast.success('تم تسجيل الدخول بنجاح');
       navigate(`/${user.role}`);
