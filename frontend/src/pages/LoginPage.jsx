@@ -25,6 +25,14 @@ const LoginPage = ({ onLogin }) => {
   const [studentClass, setStudentClass] = useState('');
   const [studentPassword, setStudentPassword] = useState('');
 
+  // Load saved student credentials
+  React.useEffect(() => {
+    const savedName = localStorage.getItem('student_name');
+    const savedClass = localStorage.getItem('student_class');
+    if (savedName) setStudentName(savedName);
+    if (savedClass) setStudentClass(savedClass);
+  }, []);
+
   const handleStaffLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
