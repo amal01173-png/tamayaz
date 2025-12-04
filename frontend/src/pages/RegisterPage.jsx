@@ -57,8 +57,19 @@ const RegisterPage = ({ onLogin }) => {
       });
 
       const { access_token, user } = response.data;
+      
+      // Save login credentials for students
+      if (user.role === 'student') {
+        localStorage.setItem('student_name', name);
+        localStorage.setItem('student_class', className);
+        toast.success('تم إنشاء الحساب بنجاح! احفظ: اسمك وصفك وكلمة المرور لتسجيل الدخول لاحقاً', {
+          duration: 6000
+        });
+      } else {
+        toast.success('تم إنشاء الحساب بنجاح');
+      }
+      
       onLogin(user, access_token);
-      toast.success('تم إنشاء الحساب بنجاح');
       navigate(`/${user.role}`);
     } catch (error) {
       toast.error(error.response?.data?.detail || 'حدث خطأ أثناء إنشاء الحساب');
