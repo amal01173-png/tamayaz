@@ -8,22 +8,22 @@ const LandingPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-blue-700">
       {/* Main Content */}
       <div className="container mx-auto px-4 py-12 flex items-center justify-center min-h-screen">
         <div className="max-w-5xl w-full">
           {/* Hero Section */}
           <div className="text-center mb-12">
             <div className="mb-6">
-              <div className="inline-block p-4 bg-gradient-to-r from-green-600 to-blue-600 rounded-full mb-4">
+              <div className="inline-block p-4 bg-white/20 backdrop-blur rounded-full mb-4 shadow-xl">
                 <Award className="w-16 h-16 text-white" />
               </div>
             </div>
-            <h1 className="text-5xl md:text-6xl font-black text-gray-900 mb-4" data-testid="hero-title">
+            <h1 className="text-5xl md:text-6xl font-black text-white mb-4 drop-shadow-lg" data-testid="hero-title">
               رواد التميز
             </h1>
-            <p className="text-xl text-gray-600 mb-2" data-testid="school-name">مدرسة متوسطة غران</p>
-            <p className="text-lg text-gray-500 mb-8" data-testid="hero-subtitle">منصة تتبع السلوك المتميز للطالبات</p>
+            <p className="text-xl text-white/90 mb-2 drop-shadow" data-testid="school-name">مدرسة متوسطة غران</p>
+            <p className="text-lg text-white/80 mb-8 drop-shadow" data-testid="hero-subtitle">منصة تتبع السلوك المتميز للطالبات</p>
             <div className="flex justify-center gap-4 flex-wrap">
               <Button 
                 onClick={() => navigate('/login')} 
