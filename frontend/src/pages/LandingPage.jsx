@@ -82,9 +82,9 @@ const LandingPage = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-6">
+      <footer className="bg-blue-900 text-white py-6">
         <div className="container mx-auto px-4 text-center">
-          <p className="text-sm" data-testid="footer-text">&copy; 2025 رواد التميز - مدرسة متوسطة غران</p>
+          <p className="text-sm opacity-90" data-testid="footer-text">&copy; 2025 رواد التميز - مدرسة متوسطة غران</p>
         </div>
       </footer>
     </div>
