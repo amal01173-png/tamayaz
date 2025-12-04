@@ -22,13 +22,14 @@ const LandingPage = () => {
             <h1 className="text-5xl md:text-6xl font-black text-white mb-4 drop-shadow-lg" data-testid="hero-title">
               رواد التميز
             </h1>
-            <p className="text-xl text-white/90 mb-2 drop-shadow" data-testid="school-name">مدرسة متوسطة غران</p>
-            <p className="text-lg text-white/80 mb-8 drop-shadow" data-testid="hero-subtitle">منصة تتبع السلوك المتميز للطالبات</p>
-            <div className="flex justify-center gap-4 flex-wrap">
+            <p className="text-xl text-white/90 mb-8 drop-shadow" data-testid="school-name">مدرسة متوسطة غران</p>
+            
+            {/* Buttons in bordered rectangle */}
+            <div className="inline-flex gap-4 p-6 bg-white/10 backdrop-blur-lg border-2 border-white/30 rounded-2xl shadow-2xl">
               <Button 
                 onClick={() => navigate('/login')} 
                 size="lg"
-                className="bg-white text-blue-600 hover:bg-gray-50 px-10 py-6 text-xl rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 font-bold"
+                className="bg-white text-blue-600 hover:bg-gray-50 px-10 py-6 text-xl rounded-xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 font-bold"
                 data-testid="login-button"
               >
                 <LogIn className="ml-2 h-6 w-6" />
@@ -38,7 +39,7 @@ const LandingPage = () => {
                 onClick={() => navigate('/register')} 
                 size="lg"
                 variant="outline"
-                className="border-2 border-white text-white hover:bg-white/10 backdrop-blur px-10 py-6 text-xl rounded-full shadow-lg transition-all duration-300 hover:scale-105"
+                className="border-2 border-white text-white hover:bg-white/20 backdrop-blur px-10 py-6 text-xl rounded-xl shadow-lg transition-all duration-300 hover:scale-105 font-bold"
                 data-testid="register-button"
               >
                 إنشاء حساب
