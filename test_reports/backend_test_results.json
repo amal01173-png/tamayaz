@@ -1,110 +1,146 @@
 {
-  "timestamp": "2025-12-04T07:50:36.172233",
-  "total_tests": 17,
-  "passed_tests": 16,
-  "success_rate": 94.11764705882352,
+  "timestamp": "2025-12-04T14:41:12.627778",
+  "total_tests": 23,
+  "passed_tests": 21,
+  "success_rate": 91.30434782608695,
   "results": [
     {
       "test": "Root API Endpoint",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-12-04T07:50:34.610769"
+      "timestamp": "2025-12-04T14:41:10.199055"
     },
     {
       "test": "Admin Registration",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-12-04T07:50:34.887064"
+      "timestamp": "2025-12-04T14:41:10.460958"
     },
     {
       "test": "Teacher Registration",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-12-04T07:50:35.146590"
+      "timestamp": "2025-12-04T14:41:10.762096"
     },
     {
-      "test": "Student Registration",
+      "test": "Student Registration Without Email",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-12-04T07:50:35.417437"
+      "timestamp": "2025-12-04T14:41:11.030983"
     },
     {
       "test": "Admin Login",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-12-04T07:50:35.676129"
+      "timestamp": "2025-12-04T14:41:11.292000"
     },
     {
       "test": "Auth Me - Admin",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-12-04T07:50:35.708234"
+      "timestamp": "2025-12-04T14:41:11.330533"
+    },
+    {
+      "test": "Student Login with Name and Class",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-12-04T14:41:11.587051"
+    },
+    {
+      "test": "Duplicate Student Prevention",
+      "success": true,
+      "details": "Status: 400",
+      "timestamp": "2025-12-04T14:41:11.630977"
+    },
+    {
+      "test": "Teacher Registration Without Email (Should Fail)",
+      "success": false,
+      "details": "Status: 200, Error: No error detail",
+      "timestamp": "2025-12-04T14:41:11.892907"
+    },
+    {
+      "test": "Teacher Registration With Email (Should Succeed)",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-12-04T14:41:12.155018"
+    },
+    {
+      "test": "Get Student Data by User ID",
+      "success": true,
+      "details": "Status: 200",
+      "timestamp": "2025-12-04T14:41:12.193388"
+    },
+    {
+      "test": "Student Data Contains Total Points",
+      "success": true,
+      "details": "total_points: 0",
+      "timestamp": "2025-12-04T14:41:12.194127"
     },
     {
       "test": "Get Students List",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-12-04T07:50:35.781818"
+      "timestamp": "2025-12-04T14:41:12.233942"
     },
     {
       "test": "Create Student",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-12-04T07:50:35.820799"
+      "timestamp": "2025-12-04T14:41:12.272658"
     },
     {
       "test": "Get Single Student",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-12-04T07:50:35.852241"
+      "timestamp": "2025-12-04T14:41:12.308973"
     },
     {
       "test": "Create Positive Behavior",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-12-04T07:50:35.897806"
+      "timestamp": "2025-12-04T14:41:12.358462"
     },
     {
       "test": "Create Negative Behavior",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-12-04T07:50:35.930860"
+      "timestamp": "2025-12-04T14:41:12.398501"
     },
     {
       "test": "Get Student Behavior Records",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-12-04T07:50:35.966167"
+      "timestamp": "2025-12-04T14:41:12.439309"
     },
     {
       "test": "Get Statistics",
       "success": true,
       "details": "Status: 200",
-      "timestamp": "2025-12-04T07:50:35.998618"
+      "timestamp": "2025-12-04T14:41:12.478688"
     },
     {
       "test": "Points Validation - Too High",
       "success": true,
       "details": "Status: 400",
-      "timestamp": "2025-12-04T07:50:36.034378"
+      "timestamp": "2025-12-04T14:41:12.514098"
     },
     {
       "test": "Points Validation - Too Low",
       "success": true,
       "details": "Status: 400",
-      "timestamp": "2025-12-04T07:50:36.107221"
+      "timestamp": "2025-12-04T14:41:12.549761"
     },
     {
       "test": "Unauthorized Access - No Token",
       "success": false,
       "details": "Status: 403, Error: Not authenticated",
-      "timestamp": "2025-12-04T07:50:36.138711"
+      "timestamp": "2025-12-04T14:41:12.584680"
     },
     {
       "test": "Unauthorized Access - Invalid Token",
       "success": true,
       "details": "Status: 401",
-      "timestamp": "2025-12-04T07:50:36.171549"
+      "timestamp": "2025-12-04T14:41:12.626650"
     }
   ]
 }
