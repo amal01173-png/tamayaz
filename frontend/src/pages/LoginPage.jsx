@@ -91,6 +91,13 @@ const LoginPage = ({ onLogin }) => {
       });
 
       const { access_token, user } = response.data;
+      
+      // Save student login credentials for auto-fill next time
+      if (user.role === 'student') {
+        localStorage.setItem('student_name', studentName);
+        localStorage.setItem('student_class', class_name);
+      }
+      
       onLogin(user, access_token);
       toast.success('تم تسجيل الدخول بنجاح');
       navigate(`/${user.role}`);
