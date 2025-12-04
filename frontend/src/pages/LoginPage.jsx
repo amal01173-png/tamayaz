@@ -6,14 +6,14 @@ import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { toast } from 'sonner';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, LogIn } from 'lucide-react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 const LoginPage = ({ onLogin }) => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +23,7 @@ const LoginPage = ({ onLogin }) => {
 
     try {
       const response = await axios.post(`${API}/auth/login`, {
-        email,
+        username,
         password
       });
 
@@ -59,22 +59,25 @@ const LoginPage = ({ onLogin }) => {
 
         <Card className="shadow-2xl border-2" data-testid="login-card">
           <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-bold" data-testid="card-title">تسجيل الدخول</CardTitle>
-            <CardDescription data-testid="card-description">أدخل بريدك الإلكتروني وكلمة المرور للدخول</CardDescription>
+            <CardTitle className="text-2xl font-bold" data-testid="card-title">
+              <LogIn className="inline-block ml-2 h-6 w-6" />
+              تسجيل الدخول
+            </CardTitle>
+            <CardDescription data-testid="card-description">أدخل اسمك وكلمة المرور للدخول</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email" data-testid="email-label">البريد الإلكتروني</Label>
+                <Label htmlFor="username" data-testid="username-label">اسم المستخدم</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  placeholder="example@school.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="username"
+                  type="text"
+                  placeholder="أدخل اسمك"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                   className="text-right"
-                  data-testid="email-input"
+                  data-testid="username-input"
                 />
               </div>
               <div className="space-y-2">
@@ -98,6 +101,20 @@ const LoginPage = ({ onLogin }) => {
               >
                 {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
               </Button>
+
+              <div className="text-center pt-4 border-t">
+                <p className="text-gray-600" data-testid="register-link-text">
+                  ليس لديك حساب؟{' '}
+                  <button
+                    type="button"
+                    onClick={() => navigate('/register')}
+                    className="text-green-600 hover:text-green-700 font-bold hover:underline"
+                    data-testid="register-link"
+                  >
+                    إنشاء حساب جديد
+                  </button>
+                </p>
+              </div>
             </form>
           </CardContent>
         </Card>

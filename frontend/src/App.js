@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import '@/App.css';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import AdminDashboard from './pages/AdminDashboard';
 import TeacherDashboard from './pages/TeacherDashboard';
 import StudentDashboard from './pages/StudentDashboard';
@@ -46,6 +47,10 @@ function App() {
           <Route 
             path="/login" 
             element={user ? <Navigate to={`/${user.role}`} /> : <LoginPage onLogin={handleLogin} />} 
+          />
+          <Route 
+            path="/register" 
+            element={user ? <Navigate to={`/${user.role}`} /> : <RegisterPage onLogin={handleLogin} />} 
           />
           <Route 
             path="/admin" 
