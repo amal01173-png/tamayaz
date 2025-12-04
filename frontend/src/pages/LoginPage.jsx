@@ -5,6 +5,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { toast } from 'sonner';
 import { ArrowRight, LogIn } from 'lucide-react';
 
@@ -13,18 +14,47 @@ const API = `${BACKEND_URL}/api`;
 
 const LoginPage = ({ onLogin }) => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  
+  // Staff login state
+  const [staffUsername, setStaffUsername] = useState('');
+  const [staffPassword, setStaffPassword] = useState('');
+  
+  // Student login state
+  const [studentName, setStudentName] = useState('');
+  const [studentClass, setStudentClass] = useState('');
+  const [studentPassword, setStudentPassword] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleStaffLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       const response = await axios.post(`${API}/auth/login`, {
-        username,
-        password
+        username: staffUsername,
+        password: staffPassword
+      });
+
+      const { access_token, user } = response.data;
+      onLogin(user, access_token);
+      toast.success('تم تسجيل الدخول بنجاح');
+      navigate(`/${user.role}`);
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'حدث خطأ أثناء تسجيل الدخول');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStudentLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = await axios.post(`${API}/auth/login`, {
+        username: studentName,
+        password: studentPassword,
+        class_name: studentClass
       });
 
       const { access_token, user } = response.data;
@@ -63,59 +93,120 @@ const LoginPage = ({ onLogin }) => {
               <LogIn className="inline-block ml-2 h-6 w-6" />
               تسجيل الدخول
             </CardTitle>
-            <CardDescription data-testid="card-description">أدخل اسمك وكلمة المرور للدخول</CardDescription>
+            <CardDescription data-testid="card-description">اختر نوع الحساب للدخول</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="username" data-testid="username-label">اسم المستخدم</Label>
-                <Input
-                  id="username"
-                  type="text"
-                  placeholder="أدخل اسمك"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                  className="text-right"
-                  data-testid="username-input"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password" data-testid="password-label">كلمة المرور</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="text-right"
-                  data-testid="password-input"
-                />
-              </div>
-              <Button
-                type="submit"
-                className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-                disabled={loading}
-                data-testid="login-submit-button"
-              >
-                {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
-              </Button>
-
-              <div className="text-center pt-4 border-t">
-                <p className="text-gray-600" data-testid="register-link-text">
-                  ليس لديك حساب؟{' '}
-                  <button
-                    type="button"
-                    onClick={() => navigate('/register')}
-                    className="text-green-600 hover:text-green-700 font-bold hover:underline"
-                    data-testid="register-link"
+            <Tabs defaultValue="staff" className="w-full" data-testid="login-tabs">
+              <TabsList className="grid w-full grid-cols-2 mb-6">
+                <TabsTrigger value="staff" data-testid="staff-tab">معلمة / إدارة</TabsTrigger>
+                <TabsTrigger value="student" data-testid="student-tab">طالبة</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="staff">
+                <form onSubmit={handleStaffLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="staff-username" data-testid="staff-username-label">اسم المستخدم</Label>
+                    <Input
+                      id="staff-username"
+                      type="text"
+                      placeholder="أدخل اسمك"
+                      value={staffUsername}
+                      onChange={(e) => setStaffUsername(e.target.value)}
+                      required
+                      className="text-right"
+                      data-testid="staff-username-input"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="staff-password" data-testid="staff-password-label">كلمة المرور</Label>
+                    <Input
+                      id="staff-password"
+                      type="password"
+                      placeholder="••••••••"
+                      value={staffPassword}
+                      onChange={(e) => setStaffPassword(e.target.value)}
+                      required
+                      className="text-right"
+                      data-testid="staff-password-input"
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+                    disabled={loading}
+                    data-testid="staff-login-button"
                   >
-                    إنشاء حساب جديد
-                  </button>
-                </p>
-              </div>
-            </form>
+                    {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
+                  </Button>
+                </form>
+              </TabsContent>
+              
+              <TabsContent value="student">
+                <form onSubmit={handleStudentLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="student-name" data-testid="student-name-label">الاسم</Label>
+                    <Input
+                      id="student-name"
+                      type="text"
+                      placeholder="أدخل اسمك"
+                      value={studentName}
+                      onChange={(e) => setStudentName(e.target.value)}
+                      required
+                      className="text-right"
+                      data-testid="student-name-input"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="student-class" data-testid="student-class-label">الصف والفصل</Label>
+                    <Input
+                      id="student-class"
+                      type="text"
+                      placeholder="مثال: 1/أ"
+                      value={studentClass}
+                      onChange={(e) => setStudentClass(e.target.value)}
+                      required
+                      className="text-right"
+                      data-testid="student-class-input"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="student-password" data-testid="student-password-label">كلمة المرور</Label>
+                    <Input
+                      id="student-password"
+                      type="password"
+                      placeholder="••••••••"
+                      value={studentPassword}
+                      onChange={(e) => setStudentPassword(e.target.value)}
+                      required
+                      className="text-right"
+                      data-testid="student-password-input"
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+                    disabled={loading}
+                    data-testid="student-login-button"
+                  >
+                    {loading ? 'جاري تسجيل الدخول...' : 'تسجيل الدخول'}
+                  </Button>
+                </form>
+              </TabsContent>
+            </Tabs>
+
+            <div className="text-center pt-4 border-t mt-6">
+              <p className="text-gray-600" data-testid="register-link-text">
+                ليس لديك حساب؟{' '}
+                <button
+                  type="button"
+                  onClick={() => navigate('/register')}
+                  className="text-green-600 hover:text-green-700 font-bold hover:underline"
+                  data-testid="register-link"
+                >
+                  إنشاء حساب جديد
+                </button>
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>

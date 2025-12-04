@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table';
 import { Badge } from '../components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
-import { LogOut, Plus, Search } from 'lucide-react';
+import { LogOut, Plus, Search, Upload, FileSpreadsheet } from 'lucide-react';
 import { toast } from 'sonner';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -26,8 +26,12 @@ const TeacherDashboard = ({ user, onLogout }) => {
   const [loading, setLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isAddStudentOpen, setIsAddStudentOpen] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
   const [newStudentName, setNewStudentName] = useState('');
   const [newStudentClass, setNewStudentClass] = useState('');
+  const [uploadFile, setUploadFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     fetchStudents();
@@ -109,6 +113,65 @@ const TeacherDashboard = ({ user, onLogout }) => {
     }
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) {
+        toast.error('يجب أن يكون الملف من نوع Excel (.xlsx أو .xls)');
+        return;
+      }
+      setUploadFile(file);
+    }
+  };
+
+  const handleImportStudents = async () => {
+    if (!uploadFile) {
+      toast.error('يرجى اختيار ملف Excel');
+      return;
+    }
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', uploadFile);
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(`${API}/students/import`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      const result = response.data;
+      toast.success(`تمت إضافة ${result.added_count} طالبة بنجاح${result.skipped_count > 0 ? `. تم تجاوز ${result.skipped_count} سجل` : ''}`);
+      
+      if (result.errors && result.errors.length > 0) {
+        console.log('Errors:', result.errors);
+      }
+
+      setIsImportOpen(false);
+      setUploadFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      fetchStudents();
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'فشل استيراد الطالبات');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const downloadTemplate = () => {
+    const link = document.createElement('a');
+    link.href = '/template_students.xlsx';
+    link.download = 'قالب_الطالبات.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center" data-testid="loading-state">جاري التحميل...</div>;
   }
@@ -140,7 +203,7 @@ const TeacherDashboard = ({ user, onLogout }) => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
           <div className="flex-1 max-w-md">
             <div className="relative">
               <Search className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
@@ -153,7 +216,63 @@ const TeacherDashboard = ({ user, onLogout }) => {
               />
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <Dialog open={isImportOpen} onOpenChange={setIsImportOpen}>
+              <DialogTrigger asChild>
+                <Button 
+                  className="bg-purple-600 hover:bg-purple-700 text-white"
+                  data-testid="import-students-button"
+                >
+                  <Upload className="ml-2 h-4 w-4" />
+                  استيراد من Excel
+                </Button>
+              </DialogTrigger>
+              <DialogContent data-testid="import-dialog">
+                <DialogHeader>
+                  <DialogTitle data-testid="import-dialog-title">استيراد الطالبات من Excel</DialogTitle>
+                  <DialogDescription data-testid="import-dialog-description">
+                    قم برفع ملف Excel يحتوي على بيانات الطالبات
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <h4 className="font-bold text-blue-900 mb-2">تنسيق الملف المطلوب:</h4>
+                    <p className="text-sm text-blue-800 mb-2">يجب أن يحتوي الملف على الأعمدة التالية:</p>
+                    <ul className="text-sm text-blue-800 list-disc list-inside space-y-1">
+                      <li>الاسم</li>
+                      <li>الصف (مثال: 1/أ، 2/ب)</li>
+                      <li>البريد الإلكتروني</li>
+                      <li>كلمة المرور</li>
+                    </ul>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>اختر ملف Excel</Label>
+                    <Input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".xlsx,.xls"
+                      onChange={handleFileChange}
+                      data-testid="file-input"
+                    />
+                    {uploadFile && (
+                      <p className="text-sm text-green-600" data-testid="selected-file">
+                        <FileSpreadsheet className="inline h-4 w-4 ml-1" />
+                        {uploadFile.name}
+                      </p>
+                    )}
+                  </div>
+                  <Button 
+                    onClick={handleImportStudents}
+                    disabled={!uploadFile || uploading}
+                    className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
+                    data-testid="submit-import"
+                  >
+                    {uploading ? 'جاري الاستيراد...' : 'استيراد الطالبات'}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+
             <Dialog open={isAddStudentOpen} onOpenChange={setIsAddStudentOpen}>
               <DialogTrigger asChild>
                 <Button 
@@ -183,9 +302,10 @@ const TeacherDashboard = ({ user, onLogout }) => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="studentClass">الفصل</Label>
+                    <Label htmlFor="studentClass">الصف والفصل</Label>
                     <Input
                       id="studentClass"
+                      placeholder="مثال: 1/أ"
                       value={newStudentClass}
                       onChange={(e) => setNewStudentClass(e.target.value)}
                       required
@@ -294,7 +414,7 @@ const TeacherDashboard = ({ user, onLogout }) => {
               <TableHeader>
                 <TableRow>
                   <TableHead className="text-right">الاسم</TableHead>
-                  <TableHead className="text-right">الفصل</TableHead>
+                  <TableHead className="text-right">الصف</TableHead>
                   <TableHead className="text-right">إجمالي النقاط</TableHead>
                 </TableRow>
               </TableHeader>
