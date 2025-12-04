@@ -235,21 +235,14 @@ async def create_student(student_data: StudentCreate, current_user: dict = Depen
     if current_user['role'] not in ['admin', 'teacher']:
         raise HTTPException(status_code=403, detail="غير مصرح لك بهذا الإجراء")
     
-    # Check if student with same name and class already exists
-    existing_student = await db.students.find_one({
-        "name": student_data.name,
-        "class_name": student_data.class_name
-    })
-    if existing_student:
-        raise HTTPException(status_code=400, detail="الطالبة موجودة مسبقاً في نفس الصف")
-    
     # If no user_id provided, create a user account automatically
     user_id = student_data.user_id
     if not user_id:
-        # Create auto email
+        # Create unique email with UUID to avoid duplicates
         safe_name = student_data.name.replace(" ", "_").lower()
         safe_class = student_data.class_name.replace("/", "_")
-        email = f"{safe_name}_{safe_class}@tamayyuz.local"
+        unique_id = str(uuid.uuid4())[:8]
+        email = f"{safe_name}_{safe_class}_{unique_id}@tamayyuz.local"
         
         # Default password
         default_password = "123456"
