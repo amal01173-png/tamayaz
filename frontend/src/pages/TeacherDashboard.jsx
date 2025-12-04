@@ -37,6 +37,7 @@ const TeacherDashboard = ({ user, onLogout }) => {
 
   useEffect(() => {
     fetchStudents();
+    fetchTopStudents();
   }, []);
 
   useEffect(() => {
