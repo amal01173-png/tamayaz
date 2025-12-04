@@ -472,6 +472,60 @@ const TeacherDashboard = ({ user, onLogout }) => {
           </div>
         </div>
 
+        {/* Top Students by Class */}
+        {Object.keys(topStudentsByClass).length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold mb-6 text-gray-900">أفضل 5 طالبات لكل صف وفصل</h2>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Object.entries(topStudentsByClass).sort().map(([className, students]) => (
+                <Card key={className} className="shadow-lg border-2 border-blue-100" data-testid={`top-class-${className}`}>
+                  <CardHeader className="bg-gradient-to-r from-green-50 to-blue-50">
+                    <CardTitle className="text-lg flex items-center">
+                      <Award className="ml-2 h-5 w-5 text-yellow-500" />
+                      الصف {className}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-4">
+                    {students.length === 0 ? (
+                      <p className="text-gray-500 text-center py-4">لا توجد طالبات</p>
+                    ) : (
+                      <div className="space-y-3">
+                        {students.map((student, index) => (
+                          <div 
+                            key={student.id} 
+                            className={`flex items-center justify-between p-3 rounded-lg ${
+                              index === 0 ? 'bg-yellow-50 border-2 border-yellow-200' :
+                              index === 1 ? 'bg-gray-50 border-2 border-gray-200' :
+                              index === 2 ? 'bg-orange-50 border-2 border-orange-200' :
+                              'bg-blue-50 border border-blue-100'
+                            }`}
+                            data-testid={`top-student-${className}-${index}`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
+                                index === 0 ? 'bg-yellow-400 text-white' :
+                                index === 1 ? 'bg-gray-400 text-white' :
+                                index === 2 ? 'bg-orange-400 text-white' :
+                                'bg-blue-400 text-white'
+                              }`}>
+                                {index + 1}
+                              </div>
+                              <span className="font-medium text-sm">{student.name}</span>
+                            </div>
+                            <Badge className="bg-green-600">
+                              {student.total_points} نقطة
+                            </Badge>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Students Table */}
         <Card className="shadow-lg" data-testid="students-table-card">
           <CardHeader>
