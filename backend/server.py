@@ -331,6 +331,90 @@ async def get_statistics(current_user: dict = Depends(get_current_user)):
         recent_activities=recent_activities
     )
 
+@api_router.post("/students/import", response_model=dict)
+async def import_students(file: UploadFile = File(...), current_user: dict = Depends(get_current_user)):
+    if current_user['role'] not in ['admin', 'teacher']:
+        raise HTTPException(status_code=403, detail="غير مصرح لك بهذا الإجراء")
+    
+    if not file.filename.endswith(('.xlsx', '.xls')):
+        raise HTTPException(status_code=400, detail="يجب أن يكون الملف من نوع Excel (.xlsx أو .xls)")
+    
+    try:
+        # Read Excel file
+        contents = await file.read()
+        df = pd.read_excel(io.BytesIO(contents))
+        
+        # Validate required columns
+        required_columns = ['الاسم', 'الصف', 'البريد الإلكتروني', 'كلمة المرور']
+        if not all(col in df.columns for col in required_columns):
+            raise HTTPException(
+                status_code=400, 
+                detail=f"الملف يجب أن يحتوي على الأعمدة التالية: {', '.join(required_columns)}"
+            )
+        
+        added_count = 0
+        skipped_count = 0
+        errors = []
+        
+        for index, row in df.iterrows():
+            try:
+                name = str(row['الاسم']).strip()
+                class_name = str(row['الصف']).strip()
+                email = str(row['البريد الإلكتروني']).strip()
+                password = str(row['كلمة المرور']).strip()
+                
+                # Skip empty rows
+                if not name or not class_name or not email:
+                    skipped_count += 1
+                    continue
+                
+                # Check if student already exists
+                existing = await db.users.find_one({"email": email})
+                if existing:
+                    skipped_count += 1
+                    errors.append(f"الطالبة {name} موجودة مسبقاً (البريد: {email})")
+                    continue
+                
+                # Create user
+                user = User(
+                    name=name,
+                    email=email,
+                    role="student"
+                )
+                
+                user_doc = user.model_dump()
+                user_doc['password_hash'] = hash_password(password)
+                user_doc['created_at'] = user_doc['created_at'].isoformat()
+                
+                await db.users.insert_one(user_doc)
+                
+                # Create student record
+                student = Student(
+                    user_id=user.id,
+                    name=name,
+                    class_name=class_name,
+                    total_points=0
+                )
+                student_doc = student.model_dump()
+                student_doc['created_at'] = student_doc['created_at'].isoformat()
+                await db.students.insert_one(student_doc)
+                
+                added_count += 1
+                
+            except Exception as e:
+                errors.append(f"خطأ في الصف {index + 2}: {str(e)}")
+                skipped_count += 1
+        
+        return {
+            "success": True,
+            "added_count": added_count,
+            "skipped_count": skipped_count,
+            "errors": errors
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"فشل قراءة الملف: {str(e)}")
+
 @api_router.get("/")
 async def root():
     return {"message": "مرحباً بك في منصة رواد التميز"}
