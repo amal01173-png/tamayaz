@@ -27,8 +27,9 @@ const LoginPage = ({ onLogin }) => {
   const [studentSection, setStudentSection] = useState('');
   const [studentPassword, setStudentPassword] = useState('');
 
-  // Load saved student credentials
+  // Load saved credentials
   React.useEffect(() => {
+    // Load student credentials
     const savedName = localStorage.getItem('student_name');
     const savedClass = localStorage.getItem('student_class');
     if (savedName) {
@@ -43,11 +44,17 @@ const LoginPage = ({ onLogin }) => {
       }
     }
     
-    // Show success message if data was loaded
+    // Show success message if student data was loaded
     if (savedName && savedClass) {
       toast.info(`مرحباً ${savedName}! تم تحميل بياناتك المحفوظة`, {
         duration: 3000
       });
+    }
+    
+    // Load staff username
+    const savedStaffUsername = localStorage.getItem('staff_username');
+    if (savedStaffUsername) {
+      setStaffUsername(savedStaffUsername);
     }
   }, []);
 
