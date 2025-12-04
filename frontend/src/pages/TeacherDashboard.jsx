@@ -253,13 +253,11 @@ const TeacherDashboard = ({ user, onLogout }) => {
                 <div className="space-y-4">
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                     <h4 className="font-bold text-blue-900 mb-2">تنسيق الملف المطلوب:</h4>
-                    <p className="text-sm text-blue-800 mb-2">يجب أن يحتوي الملف على الأعمدة التالية:</p>
+                    <p className="text-sm text-blue-800 mb-2">يجب أن يحتوي الملف على عمود واحد فقط:</p>
                     <ul className="text-sm text-blue-800 list-disc list-inside space-y-1">
-                      <li>الاسم</li>
-                      <li>الصف (مثال: 1/أ، 2/ب)</li>
-                      <li>البريد الإلكتروني</li>
-                      <li>كلمة المرور</li>
+                      <li><strong>الاسم</strong> (الاسم الثلاثي كامل)</li>
                     </ul>
+                    <p className="text-xs text-blue-700 mt-2">ملاحظة: سيتم إنشاء بريد إلكتروني وكلمة مرور تلقائياً</p>
                   </div>
                   <div className="space-y-2">
                     <Label>اختر ملف Excel</Label>
