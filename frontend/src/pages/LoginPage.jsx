@@ -150,6 +150,11 @@ const LoginPage = ({ onLogin }) => {
               </TabsContent>
               
               <TabsContent value="student">
+                <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-800 text-center">
+                    <strong>ملاحظة:</strong> يجب إدخال نفس الاسم والصف الذي تم التسجيل به
+                  </p>
+                </div>
                 <form onSubmit={handleStudentLogin} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="student-name" data-testid="student-name-label">الاسم</Label>
