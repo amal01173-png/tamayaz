@@ -64,13 +64,20 @@ const LoginPage = ({ onLogin }) => {
 
   const handleStudentLogin = async (e) => {
     e.preventDefault();
+    
+    if (!studentGrade || !studentSection) {
+      toast.error('يرجى اختيار الصف والفصل');
+      return;
+    }
+    
     setLoading(true);
 
     try {
+      const class_name = `${studentGrade}/${studentSection}`;
       const response = await axios.post(`${API}/auth/login`, {
         username: studentName,
         password: studentPassword,
-        class_name: studentClass
+        class_name: class_name
       });
 
       const { access_token, user } = response.data;
