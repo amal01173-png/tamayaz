@@ -28,7 +28,8 @@ const TeacherDashboard = ({ user, onLogout }) => {
   const [isAddStudentOpen, setIsAddStudentOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [newStudentName, setNewStudentName] = useState('');
-  const [newStudentClass, setNewStudentClass] = useState('');
+  const [newStudentGrade, setNewStudentGrade] = useState('');
+  const [newStudentSection, setNewStudentSection] = useState('');
   const [uploadFile, setUploadFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef(null);
