@@ -31,7 +31,9 @@ const LoginPage = ({ onLogin }) => {
   React.useEffect(() => {
     const savedName = localStorage.getItem('student_name');
     const savedClass = localStorage.getItem('student_class');
-    if (savedName) setStudentName(savedName);
+    if (savedName) {
+      setStudentName(savedName);
+    }
     if (savedClass) {
       // Split saved class into grade and section (e.g., "1/أ" -> grade="1", section="أ")
       const parts = savedClass.split('/');
@@ -39,6 +41,13 @@ const LoginPage = ({ onLogin }) => {
         setStudentGrade(parts[0]);
         setStudentSection(parts[1]);
       }
+    }
+    
+    // Show success message if data was loaded
+    if (savedName && savedClass) {
+      toast.info(`مرحباً ${savedName}! تم تحميل بياناتك المحفوظة`, {
+        duration: 3000
+      });
     }
   }, []);
 
