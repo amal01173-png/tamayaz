@@ -408,15 +408,14 @@ async def import_students(
         if 'الاسم' not in df.columns:
             raise HTTPException(
                 status_code=400, 
-                detail="الملف يجب أن يحتوي على عمود 'الاسم'"
+                detail="الملف يجب أن يحتوي على عمود 'الاسم' فقط"
             )
         
-        # If class_name is provided as parameter, use it for all students
-        # Otherwise, require 'الصف' column in Excel
-        if not class_name and 'الصف' not in df.columns:
+        # class_name must be provided as parameter
+        if not class_name:
             raise HTTPException(
                 status_code=400, 
-                detail="يجب تحديد الصف والفصل، أو إضافة عمود 'الصف' في الملف (مثال: 1/أ، 2/ب)"
+                detail="يجب تحديد الصف والفصل من القائمة قبل رفع الملف"
             )
         
         added_count = 0
