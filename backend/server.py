@@ -434,20 +434,11 @@ async def import_students(file: UploadFile = File(...), current_user: dict = Dep
                     password = "123456"  # Default password
                     default_password_used = True
                 
-                # Check if student with same name and class already exists
-                existing_student = await db.students.find_one({
-                    "name": name,
-                    "class_name": class_name
-                })
-                if existing_student:
-                    skipped_count += 1
-                    errors.append(f"الطالبة {name} في الصف {class_name} موجودة مسبقاً")
-                    continue
-                
-                # Create auto email for student
+                # Create unique email for student with UUID to avoid duplicates
                 safe_name = name.replace(" ", "_").lower()
                 safe_class = class_name.replace("/", "_")
-                email = f"{safe_name}_{safe_class}@tamayyuz.local"
+                unique_id = str(uuid.uuid4())[:8]
+                email = f"{safe_name}_{safe_class}_{unique_id}@tamayyuz.local"
                 
                 # Create user
                 user = User(
