@@ -491,6 +491,80 @@ async def get_top_students_by_class(current_user: dict = Depends(get_current_use
     
     return result
 
+@api_router.get("/reports/{report_type}")
+async def get_report(
+    report_type: str,
+    class_name: Optional[str] = None,
+    current_user: dict = Depends(get_current_user)
+):
+    if current_user['role'] not in ['admin', 'teacher']:
+        raise HTTPException(status_code=403, detail="غير مصرح لك بهذا الإجراء")
+    
+    if report_type not in ['weekly', 'monthly']:
+        raise HTTPException(status_code=400, detail="نوع التقرير يجب أن يكون weekly أو monthly")
+    
+    # Calculate date range
+    now = datetime.now(timezone.utc)
+    if report_type == 'weekly':
+        start_date = now - timedelta(days=7)
+    else:  # monthly
+        start_date = now - timedelta(days=30)
+    
+    # Build query
+    query = {"date": {"$gte": start_date.isoformat()}}
+    
+    # Get students filter
+    students_query = {}
+    if class_name:
+        students_query["class_name"] = class_name
+    
+    students = await db.students.find(students_query, {"_id": 0}).to_list(10000)
+    student_ids = [s['id'] for s in students]
+    
+    if student_ids:
+        query["student_id"] = {"$in": student_ids}
+    
+    # Get behavior records
+    behaviors = await db.behavior_records.find(query, {"_id": 0}).to_list(10000)
+    
+    # Calculate statistics
+    report_data = []
+    for student in students:
+        student_behaviors = [b for b in behaviors if b['student_id'] == student['id']]
+        
+        positive_behaviors = [b for b in student_behaviors if b['behavior_type'] == 'positive']
+        negative_behaviors = [b for b in student_behaviors if b['behavior_type'] == 'negative']
+        
+        positive_count = len(positive_behaviors)
+        negative_count = len(negative_behaviors)
+        positive_points = sum(b['points'] for b in positive_behaviors)
+        negative_points = sum(b['points'] for b in negative_behaviors)
+        
+        report_data.append({
+            "student_id": student['id'],
+            "student_name": student['name'],
+            "class_name": student['class_name'],
+            "total_points": student.get('total_points', 0),
+            "positive_count": positive_count,
+            "negative_count": negative_count,
+            "positive_points": positive_points,
+            "negative_points": negative_points,
+            "net_points": positive_points - negative_points,
+            "total_behaviors": positive_count + negative_count
+        })
+    
+    # Sort by total_points descending
+    report_data.sort(key=lambda x: x['total_points'], reverse=True)
+    
+    return {
+        "report_type": report_type,
+        "class_name": class_name,
+        "start_date": start_date.isoformat(),
+        "end_date": now.isoformat(),
+        "total_students": len(report_data),
+        "data": report_data
+    }
+
 @api_router.get("/")
 async def root():
     return {"message": "مرحباً بك في منصة رواد التميز"}
